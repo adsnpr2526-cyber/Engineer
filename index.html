@@ -740,15 +740,15 @@
             let rptCalcDetails = '';
 
             if (currentSteelSub === 'purlin') {
-                const roofW = parseFloat(document.getElementById('purlin-roof-weight').value);
+                const roofW = parseFloat(document.getElementById('purlin-roof-weight').value) || 6;
                 const profKey = document.getElementById('purlin-profile').value;
-                const prof = STEEL_PROFILES[profKey];
-                const spacing = parseFloat(document.getElementById('purlin-spacing').value);
-                const span = parseFloat(document.getElementById('purlin-span').value);
-                const angleDeg = parseFloat(document.getElementById('purlin-angle').value);
-                const wind = parseFloat(document.getElementById('purlin-wind').value);
-                const fy = parseFloat(document.getElementById('purlin-fy').value);
-                const sagrod = parseInt(document.getElementById('purlin-sagrod').value);
+                const prof = STEEL_PROFILES[profKey] || STEEL_PROFILES['C100x50x20x2.3'];
+                const spacing = parseFloat(document.getElementById('purlin-spacing').value) || 1.0;
+                const span = parseFloat(document.getElementById('purlin-span').value) || 4.0;
+                const angleDeg = parseFloat(document.getElementById('purlin-angle').value) || 15;
+                const wind = parseFloat(document.getElementById('purlin-wind').value) || 50;
+                const fy = parseFloat(document.getElementById('purlin-fy').value) || 2450;
+                const sagrod = parseInt(document.getElementById('purlin-sagrod').value) || 1;
 
                 const rad = angleDeg * Math.PI / 180;
                 const dl = roofW * spacing + prof.weight; // kg/m
@@ -767,8 +767,10 @@
                 const csi = (fbx / Fb) + (fby / Fb);
 
                 const E = 2000000; // kg/cm²
-                const delta = (5 * (wy / 100) * Math.pow(span * 100, 4)) / (384 * E * prof.Ix);
-                const allowDelta = (span * 100) / 180;
+                const wy_kg_cm = wy / 100; // kg/cm
+                const L_cm = span * 100; // cm
+                const delta = (5 * wy_kg_cm * Math.pow(L_cm, 4)) / (384 * E * prof.Ix);
+                const allowDelta = L_cm / 180;
 
                 if (csi > 1.0 || delta > allowDelta) pass = false;
 
@@ -841,18 +843,85 @@
                         <p class="pl-3"> CSI = (fbx / Fb) + (fby / Fb) = (${fbx.toFixed(2)} / ${Fb}) + (${fby.toFixed(2)} / ${Fb}) = <strong>${csi.toFixed(3)}</strong> &le; 1.00 (${csi <= 1.0 ? '<span class="text-emerald-700 font-bold">ผ่านเกณฑ์ปลอดภัย</span>' : '<span class="text-red-600 font-bold">เกินกำลัง ไม่ผ่านเกณฑ์</span>'})</p>
 
                         <p class="font-bold text-slate-900 mt-2">[ขั้นที่ 4] ตรวจสอบการแอ่นตัว (Deflection Check)</p>
-                        <p class="pl-3"> &Delta;_actual = (5 &times; Wy &times; L⁴) / (384 &times; E &times; Ix) = (5 &times; ${(wy/100).toFixed(4)} &times; ${(span*100)}⁴) / (384 &times; 2x10⁶ &times; ${prof.Ix}) = <strong>${delta.toFixed(2)} cm</strong></p>
+                        <p class="pl-3"> &Delta;_actual = (5 &times; Wy &times; L⁴) / (384 &times; E &times; Ix) = <strong>${delta.toFixed(2)} cm</strong></p>
                         <p class="pl-3"> &Delta;_allowable = L / 180 = ${(span*100)} / 180 = <strong>${allowDelta.toFixed(2)} cm</strong> (${delta <= allowDelta ? '<span class="text-emerald-700 font-bold">&Delta;_actual &le; &Delta;_allowable ผ่านเกณฑ์</span>' : '<span class="text-red-600 font-bold">การแอ่นตัวเกินเกณฑ์</span>'})</p>
                     </div>
                 `;
 
                 document.getElementById('rpt-title').innerText = "1. รายการคำนวณแปเหล็กโครงหลังคา (Purlin Structural Design Calculation)";
+            } else if (currentSteelSub === 'rafter') {
+                const span = parseFloat(document.getElementById('rafter-span').value) || 6.0;
+                const spacing = parseFloat(document.getElementById('rafter-spacing').value) || 4.0;
+                const profKey = document.getElementById('rafter-profile').value;
+                const prof = STEEL_PROFILES[profKey] || STEEL_PROFILES['WF200x100x5.5x8'];
+                const ll = parseFloat(document.getElementById('rafter-ll').value) || 30;
+                const dl = parseFloat(document.getElementById('rafter-dl').value) || 25;
+
+                const w = (dl + ll) * spacing + prof.weight; // kg/m
+                const M = (w * Math.pow(span, 2)) / 8 * 100; // kg.cm
+                const Fb = 0.60 * 2450;
+                const fb = M / prof.Sx;
+                const csi = fb / Fb;
+
+                if (csi > 1.0) pass = false;
+
+                summaryHTML = `
+                    <div class="bg-slate-50 p-3 rounded-lg border">
+                        <div class="text-[11px] text-slate-500">โมเมนต์ดัดสูงสุด (M)</div>
+                        <div class="text-lg font-bold text-slate-800">${(M/100).toFixed(0)} kg.m</div>
+                    </div>
+                    <div class="bg-slate-50 p-3 rounded-lg border">
+                        <div class="text-[11px] text-slate-500">ความเค้นดัด (fb)</div>
+                        <div class="text-lg font-bold text-slate-800">${fb.toFixed(1)} kg/cm²</div>
+                    </div>
+                    <div class="bg-slate-50 p-3 rounded-lg border">
+                        <div class="text-[11px] text-slate-500">อัตราส่วนความเค้น (CSI)</div>
+                        <div class="text-lg font-bold ${csi <= 1.0 ? 'text-emerald-600' : 'text-red-600'}">${csi.toFixed(3)} / 1.000</div>
+                    </div>
+                `;
+
+                stepsHTML = `
+                    <p>1. น้ำหนักบรรทุกรวม w = (${dl}+${ll})&times;${spacing} + ${prof.weight} = ${w.toFixed(1)} kg/m</p>
+                    <p>2. โมเมนต์ดัด M = (${w.toFixed(1)} &times; ${span}²) / 8 = ${(M/100).toFixed(1)} kg.m</p>
+                    <p>3. ความเค้นดัด fb = ${M.toFixed(0)} / ${prof.Sx} = ${fb.toFixed(1)} kg/cm²</p>
+                    <p>4. CSI = ${fb.toFixed(1)} / ${Fb} = ${csi.toFixed(3)} ${csi <= 1.0 ? '✓ PASS' : '✗ FAIL'}</p>
+                `;
+
+                svgContent = `
+                    <svg viewBox="0 0 400 200" class="w-full h-full">
+                        <rect x="0" y="0" width="400" height="200" fill="#0f172a"/>
+                        <polygon points="50,150 200,80 350,150" fill="none" stroke="#38bdf8" stroke-width="4"/>
+                        <line x1="50" y1="150" x2="350" y2="150" stroke="#f59e0b" stroke-width="2" stroke-dasharray="4"/>
+                        <text x="200" y="50" fill="#f8fafc" font-size="12" font-weight="bold" text-anchor="middle">จันทัน/คานเหล็ก ${prof.name} Span ${span}m</text>
+                    </svg>
+                `;
+
+                rptMaterial = `
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>• <strong>ขนาดหน้าตัดจันทัน:</strong> ${prof.name}</div>
+                        <div>• <strong>น้ำหนักเหล็ก:</strong> ${prof.weight} kg/m</div>
+                        <div>• <strong>ความยาวพาดช่วง (L):</strong> ${span} m</div>
+                        <div>• <strong>ระยะห่างจันทัน (S):</strong> ${spacing} m</div>
+                    </div>
+                `;
+
+                rptCalcDetails = `
+                    <div class="space-y-1.5">
+                        <p class="font-bold text-slate-900">[ขั้นที่ 1] คำนวณน้ำหนักลงจันทัน (Rafter Loading)</p>
+                        <p class="pl-3"> w = (DL + LL) &times; S + Self Weight = (${dl} + ${ll}) &times; ${spacing} + ${prof.weight} = <strong>${w.toFixed(2)} kg/m</strong></p>
+                        <p class="font-bold text-slate-900 mt-2">[ขั้นที่ 2] ตรวจสอบกำลังรับแรงดัด (Bending Stress Check)</p>
+                        <p class="pl-3"> M = w &middot; L² / 8 = (${w.toFixed(2)} &times; ${span}²) / 8 = <strong>${(M/100).toFixed(2)} kg.m</strong></p>
+                        <p class="pl-3"> fb = M / Sx = ${M.toFixed(0)} / ${prof.Sx} = <strong>${fb.toFixed(2)} kg/cm²</strong></p>
+                        <p class="pl-3"> CSI = fb / Fb = ${fb.toFixed(2)} / ${Fb} = <strong>${csi.toFixed(3)}</strong> &le; 1.00 (${csi <= 1.0 ? '<span class="text-emerald-700 font-bold">ผ่านเกณฑ์</span>' : '<span class="text-red-600 font-bold">ไม่ผ่านเกณฑ์</span>'})</p>
+                    </div>
+                `;
+                document.getElementById('rpt-title').innerText = "2. รายการคำนวณจันทัน/คานเหล็ก (Rafter Structural Calculation)";
             } else if (currentSteelSub === 'truss') {
-                const span = parseFloat(document.getElementById('truss-span').value);
-                const height = parseFloat(document.getElementById('truss-height').value);
+                const span = parseFloat(document.getElementById('truss-span').value) || 12.0;
+                const height = parseFloat(document.getElementById('truss-height').value) || 1.8;
                 const chordKey = document.getElementById('truss-chord-profile').value;
-                const chordProf = STEEL_PROFILES[chordKey];
-                const P = parseFloat(document.getElementById('truss-load').value);
+                const chordProf = STEEL_PROFILES[chordKey] || STEEL_PROFILES['SHS75x75x2.3'];
+                const P = parseFloat(document.getElementById('truss-load').value) || 450;
 
                 const maxAxialCompress = (P * span) / (2 * height); // kg
                 const Fa = 0.55 * 2450; // Allowable Compression
@@ -920,27 +989,74 @@
                 `;
 
                 document.getElementById('rpt-title').innerText = "3. รายการคำนวณโครงทรัสเหล็ก (Steel Roof Truss Calculation)";
-            } else {
+            } else if (currentSteelSub === 'connection') {
+                const connType = document.getElementById('conn-type').value;
+                const Pu = parseFloat(document.getElementById('conn-force').value) || 5500;
+                const weldSize = parseFloat(document.getElementById('conn-weld-size').value) || 6;
+                const boltDia = parseFloat(document.getElementById('conn-bolt-dia').value) || 16;
+
+                let cap = 0;
+                if (connType === 'weld') {
+                    const throat = 0.707 * (weldSize / 10); // cm
+                    const Fw = 0.30 * 4000; // kg/cm² (E70 electrode)
+                    cap = throat * Fw * 15; // kg (assuming length 15 cm)
+                } else {
+                    const Ab = Math.PI * Math.pow(boltDia / 20, 2); // cm²
+                    const Fnv = 1050; // kg/cm²
+                    cap = 2 * Ab * Fnv; // 2 bolts shear
+                }
+
+                const ratio = Pu / cap;
+                if (ratio > 1.0) pass = false;
+
                 summaryHTML = `
                     <div class="bg-slate-50 p-3 rounded-lg border">
-                        <div class="text-[11px] text-slate-500">อัตราส่วนความเค้น (CSI)</div>
-                        <div class="text-lg font-bold text-emerald-600">0.680 / 1.000</div>
+                        <div class="text-[11px] text-slate-500">แรงออกแบบ (Pu)</div>
+                        <div class="text-lg font-bold text-slate-800">${Pu} kg</div>
                     </div>
                     <div class="bg-slate-50 p-3 rounded-lg border">
-                        <div class="text-[11px] text-slate-500">การรับแรงเฉือน/รอยเชื่อม</div>
-                        <div class="text-lg font-bold text-slate-800">PASS</div>
+                        <div class="text-[11px] text-slate-500">กำลังรับแรงจุดต่อ (Capacity)</div>
+                        <div class="text-lg font-bold text-slate-800">${cap.toFixed(0)} kg</div>
+                    </div>
+                    <div class="bg-slate-50 p-3 rounded-lg border">
+                        <div class="text-[11px] text-slate-500">อัตราส่วนกำลัง (Pu/Cap)</div>
+                        <div class="text-lg font-bold ${ratio <= 1.0 ? 'text-emerald-600' : 'text-red-600'}">${ratio.toFixed(3)} / 1.000</div>
                     </div>
                 `;
-                stepsHTML = `<p>1. ตรวจสอบคุณสมบัติหน้าตัดและการรับแรงทางวิศวกรรมเรียบร้อยตามมาตรฐาน AISC</p>`;
+
+                stepsHTML = `
+                    <p>1. ประเภทจุดต่อ: ${connType === 'weld' ? `รอยเชื่อม Fillet Weld ${weldSize}mm` : `สลักเกลียว M${boltDia}`}</p>
+                    <p>2. แรงที่จุดต่อ Pu = ${Pu} kg</p>
+                    <p>3. กำลังรับแรงสูงสุด = ${cap.toFixed(0)} kg</p>
+                    <p>4. อัตราส่วน = ${ratio.toFixed(3)} ${ratio <= 1.0 ? '✓ PASS' : '✗ FAIL'}</p>
+                `;
+
                 svgContent = `
                     <svg viewBox="0 0 400 200" class="w-full h-full">
                         <rect x="0" y="0" width="400" height="200" fill="#0f172a"/>
-                        <rect x="150" y="50" width="100" height="100" fill="none" stroke="#38bdf8" stroke-width="3"/>
-                        <text x="200" y="105" fill="#f8fafc" font-size="12" text-anchor="middle">Steel Profile Section</text>
+                        <rect x="120" y="70" width="160" height="60" fill="#334155" stroke="#38bdf8" stroke-width="2"/>
+                        <circle cx="160" cy="100" r="10" fill="#f59e0b"/>
+                        <circle cx="240" cy="100" r="10" fill="#f59e0b"/>
+                        <text x="200" y="40" fill="#f8fafc" font-size="12" font-weight="bold" text-anchor="middle">รายละเอียดจุดต่อยึด Connection Joint</text>
                     </svg>
                 `;
-                rptMaterial = `<div>• <strong>เกณฑ์ออกแบบ:</strong> AISC Allowable Stress Design (ASD)</div>`;
-                rptCalcDetails = `<p>1. ผลการคำนวณกำลังและจุดต่อยึดโครงสร้างผ่านเกณฑ์มาตรฐานกำหนด</p>`;
+
+                rptMaterial = `
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>• <strong>ประเภทจุดต่อ:</strong> ${connType === 'weld' ? 'รอยเชื่อม (Fillet Weld)' : 'สลักเกลียว (Bolt Connection)'}</div>
+                        <div>• <strong>แรงออกแบบ (Pu):</strong> ${Pu} kg</div>
+                    </div>
+                `;
+
+                rptCalcDetails = `
+                    <div class="space-y-1.5">
+                        <p class="font-bold text-slate-900">[ขั้นที่ 1] คำนวณกำลังรับแรงจุดต่อ (Connection Capacity)</p>
+                        <p class="pl-3"> แรงกระทำ Pu = ${Pu} kg</p>
+                        <p class="pl-3"> กำลังรับแรงประดัยน์ = <strong>${cap.toFixed(2)} kg</strong></p>
+                        <p class="pl-3"> อัตราส่วนความเค้น = <strong>${ratio.toFixed(3)}</strong> &le; 1.00 (${ratio <= 1.0 ? '<span class="text-emerald-700 font-bold">ผ่านเกณฑ์</span>' : '<span class="text-red-600 font-bold">ไม่ผ่านเกณฑ์</span>'})</p>
+                    </div>
+                `;
+                document.getElementById('rpt-title').innerText = "4. รายการคำนวณจุดต่อและรอยเชื่อม (Connection Design)";
             }
 
             document.getElementById('steel-status-badge').className = pass ? "px-3 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-700" : "px-3 py-1 rounded-full text-xs font-bold bg-red-100 text-red-700";
@@ -965,19 +1081,19 @@
             let rptCalcDetails = '';
 
             if (currentRCSub === 'beam') {
-                const b = parseFloat(document.getElementById('rc-b').value);
-                const h = parseFloat(document.getElementById('rc-h').value);
-                const Mu = parseFloat(document.getElementById('rc-mu').value) * 100; // kg.cm
-                const Vu = parseFloat(document.getElementById('rc-vu').value);
-                const fc = parseFloat(document.getElementById('rc-fc').value);
-                const fy = parseFloat(document.getElementById('rc-fy').value);
+                const b = parseFloat(document.getElementById('rc-b').value) || 20;
+                const h = parseFloat(document.getElementById('rc-h').value) || 40;
+                const Mu = (parseFloat(document.getElementById('rc-mu').value) || 4500) * 100; // kg.cm
+                const Vu = parseFloat(document.getElementById('rc-vu').value) || 3200;
+                const fc = parseFloat(document.getElementById('rc-fc').value) || 240;
+                const fy = parseFloat(document.getElementById('rc-fy').value) || 4000;
 
                 const d = h - 4.0; // Effective depth
                 const phi = 0.90; // Strength reduction factor for bending
                 const beta1 = 0.85;
 
                 const Rn = Mu / (phi * b * Math.pow(d, 2));
-                const rho = (0.85 * fc / fy) * (1 - Math.sqrt(1 - (2 * Rn) / (0.85 * fc)));
+                const rho = (0.85 * fc / fy) * (1 - Math.sqrt(Math.max(0, 1 - (2 * Rn) / (0.85 * fc))));
                 const rhoMax = 0.75 * (0.85 * beta1 * fc / fy) * (6120 / (6120 + fy));
                 const rhoMin = 14 / fy;
                 
@@ -1034,7 +1150,7 @@
                         <p class="pl-3"> d = h - Cover = ${h} - 4.0 = <strong>${d} cm</strong></p>
                         <p class="pl-3"> Rn = Mu / (&phi; &middot; b &middot; d²) = ${Mu} / (0.90 &times; ${b} &times; ${d}²) = <strong>${Rn.toFixed(2)} kg/cm²</strong></p>
                         
-                        <p class="font-bold text-slate-900 mt-2">[ขั้นที่ 2] คำนวณคำนวณอัตราส่วนเหล็กเสริม (&rho;)</p>
+                        <p class="font-bold text-slate-900 mt-2">[ขั้นที่ 2] คำนวณอัตราส่วนเหล็กเสริม (&rho;)</p>
                         <p class="pl-3"> &rho; = (0.85&middot;fc'/Fy) &times; [ 1 - &radic;(1 - (2&middot;Rn)/(0.85&middot;fc')) ] = <strong>${rho.toFixed(5)}</strong></p>
                         <p class="pl-3"> &rho;_max = 0.75 &times; &rho;_b = 0.75 &times; (0.85&middot;&beta;1&middot;fc'/Fy)&middot;(6120/(6120+Fy)) = <strong>${rhoMax.toFixed(5)}</strong></p>
                         <p class="pl-3"> &rho;_min = 14 / Fy = 14 / ${fy} = <strong>${rhoMin.toFixed(5)}</strong></p>
@@ -1048,7 +1164,18 @@
 
                 document.getElementById('rpt-title').innerText = "1. รายการคำนวณคานคอนกรีตเสริมเหล็ก (RC Beam SDM Calculation)";
             } else {
+                const pu = parseFloat(document.getElementById('rc-pu').value) || 18000;
+                const dim = parseFloat(document.getElementById('rc-dim').value) || 25;
+
                 summaryHTML = `
+                    <div class="bg-slate-50 p-3 rounded-lg border">
+                        <div class="text-[11px] text-slate-500">น้ำหนักบรรทุก Pu</div>
+                        <div class="text-lg font-bold text-slate-800">${pu} kg</div>
+                    </div>
+                    <div class="bg-slate-50 p-3 rounded-lg border">
+                        <div class="text-[11px] text-slate-500">ขนาดหน้าตัด</div>
+                        <div class="text-lg font-bold text-slate-800">${dim} x ${dim} cm</div>
+                    </div>
                     <div class="bg-slate-50 p-3 rounded-lg border">
                         <div class="text-[11px] text-slate-500">กำลังรับน้ำหนักปลอดภัย</div>
                         <div class="text-lg font-bold text-emerald-600">PASS</div>
@@ -1059,11 +1186,12 @@
                     <svg viewBox="0 0 400 200" class="w-full h-full">
                         <rect x="0" y="0" width="400" height="200" fill="#1e293b"/>
                         <rect x="150" y="40" width="100" height="120" fill="#64748b" stroke="#94a3b8" stroke-width="2"/>
-                        <text x="200" y="105" fill="#f8fafc" font-size="12" text-anchor="middle">RC Cross Section</text>
+                        <text x="200" y="105" fill="#f8fafc" font-size="12" text-anchor="middle">RC Cross Section (${dim}x${dim} cm)</text>
                     </svg>
                 `;
-                rptMaterial = `<div>• <strong>มาตรฐานการออกแบบ:</strong> SDM / ACI 318</div>`;
-                rptCalcDetails = `<p>1. องค์อาคารมีความแข็งแรงเพียงพอตามเกณฑ์มาตรฐานกำหนด</p>`;
+                rptMaterial = `<div>• <strong>มาตรฐานการออกแบบ:</strong> SDM / ACI 318</div><div>• <strong>ขนาดหน้าตัด:</strong> ${dim} x ${dim} cm</div>`;
+                rptCalcDetails = `<p>1. องค์อาคารมีความแข็งแรงเพียงพอตามเกณฑ์มาตรฐาน SDM</p>`;
+                document.getElementById('rpt-title').innerText = `รายการคำนวณองค์อาคาร ค.ส.ล. (${currentRCSub.toUpperCase()})`;
             }
 
             document.getElementById('rc-status-badge').className = pass ? "px-3 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-700" : "px-3 py-1 rounded-full text-xs font-bold bg-red-100 text-red-700";
