@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ระบบคำนวณโครงสร้าง ค.ส.ล. (SDM) & โครงหลังคาเหล็กครบวงจร</title>
+    <title>ProStruct Master Design - ระบบคำนวณโครงสร้าง ค.ส.ล. & โครงหลังคาเหล็ก</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome Icons -->
@@ -20,17 +20,16 @@
                     colors: {
                         brand: {
                             50: '#f0f7ff',
-                            100: '#e0effe',
+                            100: '#e0f2fe',
                             500: '#0284c7',
-                            600: '#0369a1',
-                            700: '#075985',
-                            800: '#0c4a6e',
-                            900: '#0a3651',
+                            600: '#026597',
+                            700: '#0369a1',
                         },
-                        steel: {
-                            500: '#475569',
-                            600: '#334155',
-                            700: '#1e293b',
+                        lux: {
+                            base: '#0f172a',
+                            card: '#1e293b',
+                            accent: '#6366f1',
+                            glow: '#38bdf8'
                         }
                     },
                     fontFamily: {
@@ -45,8 +44,22 @@
     <style>
         body {
             font-family: 'Prompt', sans-serif;
-            background-color: #f8fafc;
-            color: #1e293b;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            color: #0f172a;
+        }
+
+        /* Glassmorphism Classes */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.02);
+        }
+
+        .glass-header {
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         /* Printable A4 Page Setup */
@@ -86,15 +99,15 @@
             min-height: 297mm;
             padding: 15mm;
             background: white;
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.1);
             margin: 0 auto;
             font-family: 'Sarabun', sans-serif;
         }
 
         .tab-btn.active {
-            border-bottom: 3px solid #0284c7;
-            color: #0284c7;
-            font-weight: 600;
+            background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+            color: white;
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
         }
 
         .custom-scrollbar::-webkit-scrollbar {
@@ -109,7 +122,6 @@
             border-radius: 3px;
         }
 
-        /* Tooltip animation */
         .tooltip-box {
             animation: fadeIn 0.15s ease-out;
         }
@@ -119,64 +131,80 @@
         }
     </style>
 </head>
-<body class="min-h-screen flex flex-col">
+<body class="min-h-screen flex flex-col selection:bg-indigo-500 selection:text-white">
 
-    <header class="bg-slate-900 text-white shadow-lg sticky top-0 z-50 no-print">
+    <!-- Header Section with Credit Developer -->
+    <header class="glass-header text-white shadow-xl sticky top-0 z-50 no-print">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-16">
-                <div class="flex items-center space-x-3">
-                    <div class="bg-brand-500 p-2 rounded-lg text-white font-bold text-xl">
+            <div class="flex items-center justify-between h-20">
+                <div class="flex items-center space-x-4">
+                    <div class="bg-gradient-to-tr from-indigo-500 to-sky-400 p-3 rounded-2xl text-white font-bold text-2xl shadow-lg shadow-indigo-500/30">
                         <i class="fa-solid fa-drafting-compass"></i>
                     </div>
                     <div>
-                        <h1 class="font-bold text-lg leading-tight">ProStruct Master Design</h1>
-                        <p class="text-xs text-slate-400">โปรแกรมคำนวณ ค.ส.ล. (SDM) & โครงหลังคาเหล็กมาตรฐานวิศวกรรม</p>
+                        <div class="flex items-center space-x-2">
+                            <h1 class="font-extrabold text-xl tracking-wide bg-gradient-to-r from-white via-slate-100 to-slate-300 bg-clip-text text-transparent">ProStruct Master Design</h1>
+                            <span class="bg-indigo-500/20 text-indigo-300 text-[10px] font-semibold px-2 py-0.5 rounded-full border border-indigo-500/30">v2.5 PRO</span>
+                        </div>
+                        <p class="text-xs text-slate-400 mt-0.5">โปรแกรมคำนวณ ค.ส.ล. (SDM) & โครงหลังคาเหล็กมาตรฐานวิศวกรรม</p>
                     </div>
                 </div>
+
+                <!-- Developer Credit Badge -->
                 <div class="flex items-center space-x-3">
-                    <button onclick="window.print()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition flex items-center shadow-md">
-                        <i class="fa-solid fa-print mr-2"></i> พิมพ์รายงาน A4
-                    </button>
+                    <div class="bg-slate-800/80 border border-slate-700/80 rounded-xl px-4 py-2 flex items-center space-x-3 shadow-inner">
+                        <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center text-slate-900 font-bold text-sm shadow">
+                            <i class="fa-solid fa-user-gear"></i>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-[10px] text-slate-400 uppercase tracking-wider">พัฒนาโดย</div>
+                            <div class="text-xs font-bold text-amber-300 tracking-wide">นายช่างไผ่</div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </header>
 
-    <div class="bg-white border-b border-slate-200 no-print sticky top-16 z-40 shadow-sm">
+    <!-- Main Navigation Bar -->
+    <div class="bg-white/80 backdrop-blur-md border-b border-slate-200/80 no-print sticky top-20 z-40 shadow-sm">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <nav class="flex space-x-8 overflow-x-auto custom-scrollbar" id="mainTabs">
-                <button onclick="switchModule('steel')" id="tab-steel" class="tab-btn active py-4 px-2 border-b-2 font-medium text-sm flex items-center space-x-2 whitespace-nowrap">
-                    <i class="fa-solid fa-industry text-lg"></i>
+            <nav class="flex space-x-3 py-2.5 overflow-x-auto custom-scrollbar" id="mainTabs">
+                <button onclick="switchModule('steel')" id="tab-steel" class="tab-btn active transition-all duration-300 py-2.5 px-5 rounded-xl font-medium text-sm flex items-center space-x-2.5 whitespace-nowrap">
+                    <i class="fa-solid fa-industry text-base"></i>
                     <span>โครงหลังคาเหล็ก (Steel Roof)</span>
                 </button>
-                <button onclick="switchModule('rc')" id="tab-rc" class="tab-btn py-4 px-2 border-b-2 font-medium text-sm text-slate-500 hover:text-slate-700 flex items-center space-x-2 whitespace-nowrap">
-                    <i class="fa-solid fa-cubes text-lg"></i>
+                <button onclick="switchModule('rc')" id="tab-rc" class="tab-btn transition-all duration-300 py-2.5 px-5 rounded-xl font-medium text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-100 flex items-center space-x-2.5 whitespace-nowrap">
+                    <i class="fa-solid fa-cubes text-base"></i>
                     <span>คอนกรีตเสริมเหล็ก (RC SDM)</span>
                 </button>
             </nav>
         </div>
     </div>
 
-    <main class="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8 no-print">
+    <main class="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8 no-print space-y-6">
         
         <!-- MODULE 1: STEEL ROOF STRUCTURE DESIGN -->
         <div id="module-steel" class="space-y-6">
             <!-- Steel Sub Navigation -->
-            <div class="flex flex-wrap gap-2 border-b border-slate-200 pb-3">
-                <button onclick="switchSteelSub('purlin')" id="btn-steel-purlin" class="sub-tab px-4 py-2 rounded-lg text-sm font-medium bg-brand-500 text-white shadow-sm">1. คำนวณแปเหล็ก (Purlin)</button>
-                <button onclick="switchSteelSub('rafter')" id="btn-steel-rafter" class="sub-tab px-4 py-2 rounded-lg text-sm font-medium bg-slate-200 text-slate-700 hover:bg-slate-300">2. คำนวณจันทัน/คาน (Rafter)</button>
-                <button onclick="switchSteelSub('truss')" id="btn-steel-truss" class="sub-tab px-4 py-2 rounded-lg text-sm font-medium bg-slate-200 text-slate-700 hover:bg-slate-300">3. โครงทรัส/จั่วเหล็ก (Truss)</button>
-                <button onclick="switchSteelSub('connection')" id="btn-steel-connection" class="sub-tab px-4 py-2 rounded-lg text-sm font-medium bg-slate-200 text-slate-700 hover:bg-slate-300">4. จุดต่อ&รอยเชื่อม (Connection)</button>
+            <div class="flex flex-wrap gap-2 bg-slate-200/60 p-1.5 rounded-2xl border border-slate-200/80">
+                <button onclick="switchSteelSub('purlin')" id="btn-steel-purlin" class="sub-tab px-4 py-2 rounded-xl text-xs font-semibold bg-indigo-600 text-white shadow-md transition-all">1. คำนวณแปเหล็ก (Purlin)</button>
+                <button onclick="switchSteelSub('rafter')" id="btn-steel-rafter" class="sub-tab px-4 py-2 rounded-xl text-xs font-semibold text-slate-600 hover:text-slate-900 hover:bg-white/50 transition-all">2. คำนวณจันทัน/คาน (Rafter)</button>
+                <button onclick="switchSteelSub('truss')" id="btn-steel-truss" class="sub-tab px-4 py-2 rounded-xl text-xs font-semibold text-slate-600 hover:text-slate-900 hover:bg-white/50 transition-all">3. โครงทรัส/จั่วเหล็ก (Truss)</button>
+                <button onclick="switchSteelSub('connection')" id="btn-steel-connection" class="sub-tab px-4 py-2 rounded-xl text-xs font-semibold text-slate-600 hover:text-slate-900 hover:bg-white/50 transition-all">4. จุดต่อ&รอยเชื่อม (Connection)</button>
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
                 <!-- Input Panel -->
-                <div class="lg:col-span-5 bg-white p-6 rounded-xl shadow-sm border border-slate-200 space-y-5">
-                    <div class="border-b pb-3 flex justify-between items-center">
-                        <h2 class="font-semibold text-lg text-slate-800 flex items-center">
-                            <i class="fa-solid fa-sliders text-brand-500 mr-2"></i> ป้อนข้อมูลการออกแบบ
+                <div class="lg:col-span-5 glass-card p-6 rounded-3xl space-y-5">
+                    <div class="border-b border-slate-200/80 pb-4 flex justify-between items-center">
+                        <h2 class="font-bold text-base text-slate-800 flex items-center">
+                            <span class="w-8 h-8 rounded-xl bg-indigo-100 text-indigo-600 flex items-center justify-center mr-2.5">
+                                <i class="fa-solid fa-sliders"></i>
+                            </span>
+                            ป้อนข้อมูลการออกแบบ
                         </h2>
-                        <span id="steel-code-tag" class="text-xs bg-brand-100 text-brand-700 px-2.5 py-1 rounded-full font-medium">ASD / LRFD Standard</span>
+                        <span id="steel-code-tag" class="text-[11px] bg-indigo-50 text-indigo-700 px-3 py-1 rounded-full font-semibold border border-indigo-200/60">ASD / LRFD Standard</span>
                     </div>
 
                     <!-- Dynamic Form Sections for Steel Roof -->
@@ -184,15 +212,11 @@
                         <!-- Content populated dynamically by JS -->
                     </div>
 
-                    <!-- Action Buttons Side-by-Side -->
-                    <div class="grid grid-cols-2 gap-3 pt-2">
-                        <button onclick="calculateSteel()" class="bg-brand-600 hover:bg-brand-700 text-white font-semibold py-3 px-3 rounded-xl shadow transition duration-200 flex items-center justify-center space-x-2 text-sm">
+                    <!-- Action Button -->
+                    <div class="pt-2">
+                        <button onclick="calculateSteel()" class="w-full bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800 text-white font-semibold py-3.5 px-4 rounded-2xl shadow-lg shadow-indigo-500/25 transition duration-200 flex items-center justify-center space-x-2 text-sm">
                             <i class="fa-solid fa-calculator"></i>
                             <span>คำนวณโครงสร้าง</span>
-                        </button>
-                        <button onclick="window.print()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-3 px-3 rounded-xl shadow transition duration-200 flex items-center justify-center space-x-2 text-sm">
-                            <i class="fa-solid fa-print"></i>
-                            <span>พิมพ์รายงาน A4</span>
                         </button>
                     </div>
                 </div>
@@ -200,28 +224,28 @@
                 <!-- Preview & Result Panel -->
                 <div class="lg:col-span-7 space-y-6">
                     <!-- Dynamic SVG Visualizer -->
-                    <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200">
-                        <h3 class="text-sm font-semibold text-slate-700 mb-3 flex items-center">
-                            <i class="fa-solid fa-vector-square text-brand-500 mr-2"></i> แบบจำลองรูปตัดโครงสร้าง (Interactive SVG)
+                    <div class="glass-card p-5 rounded-3xl">
+                        <h3 class="text-xs font-bold text-slate-600 uppercase tracking-wider mb-3 flex items-center">
+                            <i class="fa-solid fa-vector-square text-indigo-500 mr-2"></i> แบบจำลองรูปตัดโครงสร้าง (Interactive SVG)
                         </h3>
-                        <div id="steel-svg-wrapper" class="w-full h-64 bg-slate-900 rounded-lg overflow-hidden flex items-center justify-center p-2 relative">
+                        <div id="steel-svg-wrapper" class="w-full h-64 bg-slate-950 rounded-2xl overflow-hidden flex items-center justify-center p-2 relative shadow-inner border border-slate-800">
                             <!-- SVG Rendered Here -->
                         </div>
                     </div>
 
                     <!-- Results & Ratio Indicators -->
-                    <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 space-y-4">
-                        <div class="flex justify-between items-center border-b pb-3">
-                            <h3 class="font-semibold text-slate-800">สรุปผลการตรวจสอบทางวิศวกรรม</h3>
-                            <span id="steel-status-badge" class="px-3 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-700">PASS / ผ่านเกณฑ์</span>
+                    <div class="glass-card p-6 rounded-3xl space-y-4">
+                        <div class="flex justify-between items-center border-b border-slate-200/80 pb-3">
+                            <h3 class="font-bold text-slate-800 text-sm">สรุปผลการตรวจสอบทางวิศวกรรม</h3>
+                            <span id="steel-status-badge" class="px-3.5 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-700 border border-emerald-200">PASS / ผ่านเกณฑ์</span>
                         </div>
 
                         <div id="steel-result-summary" class="grid grid-cols-2 sm:grid-cols-3 gap-3">
                             <!-- Dynamic Result Cards -->
                         </div>
 
-                        <div class="bg-slate-50 p-4 rounded-lg border border-slate-200">
-                            <h4 class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">ขั้นตอนการคำนวณแบบละเอียด (Calculation Logs)</h4>
+                        <div class="bg-slate-900/5 p-4 rounded-2xl border border-slate-200/80">
+                            <h4 class="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2">ขั้นตอนการคำนวณแบบละเอียด (Calculation Logs)</h4>
                             <div id="steel-calc-steps" class="text-xs font-mono space-y-1.5 text-slate-700 max-h-48 overflow-y-auto custom-scrollbar">
                                 <!-- Steps detail -->
                             </div>
@@ -234,63 +258,62 @@
         <!-- MODULE 2: RC STRUCTURE DESIGN (SDM) -->
         <div id="module-rc" class="hidden space-y-6">
             <!-- RC Sub Navigation -->
-            <div class="flex flex-wrap gap-2 border-b border-slate-200 pb-3">
-                <button onclick="switchRCSub('beam')" id="btn-rc-beam" class="rc-sub-tab px-4 py-2 rounded-lg text-sm font-medium bg-brand-500 text-white shadow-sm">1. คาน ค.ส.ล. (Beam)</button>
-                <button onclick="switchRCSub('slab')" id="btn-rc-slab" class="rc-sub-tab px-4 py-2 rounded-lg text-sm font-medium bg-slate-200 text-slate-700 hover:bg-slate-300">2. แผ่นพื้น (Slab)</button>
-                <button onclick="switchRCSub('column')" id="btn-rc-column" class="rc-sub-tab px-4 py-2 rounded-lg text-sm font-medium bg-slate-200 text-slate-700 hover:bg-slate-300">3. เสา ค.ส.ล. (Column)</button>
-                <button onclick="switchRCSub('footing')" id="btn-rc-footing" class="rc-sub-tab px-4 py-2 rounded-lg text-sm font-medium bg-slate-200 text-slate-700 hover:bg-slate-300">4. ฐานราก (Footing)</button>
+            <div class="flex flex-wrap gap-2 bg-slate-200/60 p-1.5 rounded-2xl border border-slate-200/80">
+                <button onclick="switchRCSub('beam')" id="btn-rc-beam" class="rc-sub-tab px-4 py-2 rounded-xl text-xs font-semibold bg-indigo-600 text-white shadow-md transition-all">1. คาน ค.ส.ล. (Beam)</button>
+                <button onclick="switchRCSub('slab')" id="btn-rc-slab" class="rc-sub-tab px-4 py-2 rounded-xl text-xs font-semibold text-slate-600 hover:text-slate-900 hover:bg-white/50 transition-all">2. แผ่นพื้น (Slab)</button>
+                <button onclick="switchRCSub('column')" id="btn-rc-column" class="rc-sub-tab px-4 py-2 rounded-xl text-xs font-semibold text-slate-600 hover:text-slate-900 hover:bg-white/50 transition-all">3. เสา ค.ส.ล. (Column)</button>
+                <button onclick="switchRCSub('footing')" id="btn-rc-footing" class="rc-sub-tab px-4 py-2 rounded-xl text-xs font-semibold text-slate-600 hover:text-slate-900 hover:bg-white/50 transition-all">4. ฐานราก (Footing)</button>
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
                 <!-- Input Panel -->
-                <div class="lg:col-span-5 bg-white p-6 rounded-xl shadow-sm border border-slate-200 space-y-5">
-                    <div class="border-b pb-3 flex justify-between items-center">
-                        <h2 class="font-semibold text-lg text-slate-800 flex items-center">
-                            <i class="fa-solid fa-cube text-brand-500 mr-2"></i> ป้อนข้อมูล ค.ส.ล. (SDM)
+                <div class="lg:col-span-5 glass-card p-6 rounded-3xl space-y-5">
+                    <div class="border-b border-slate-200/80 pb-4 flex justify-between items-center">
+                        <h2 class="font-bold text-base text-slate-800 flex items-center">
+                            <span class="w-8 h-8 rounded-xl bg-indigo-100 text-indigo-600 flex items-center justify-center mr-2.5">
+                                <i class="fa-solid fa-cube"></i>
+                            </span>
+                            ป้อนข้อมูล ค.ส.ล. (SDM)
                         </h2>
-                        <span class="text-xs bg-emerald-100 text-emerald-800 px-2.5 py-1 rounded-full font-medium">SDM / ACI 318</span>
+                        <span class="text-[11px] bg-emerald-50 text-emerald-700 px-3 py-1 rounded-full font-semibold border border-emerald-200/60">SDM / ACI 318</span>
                     </div>
 
                     <div id="rc-input-container" class="space-y-4">
                         <!-- RC Input Form -->
                     </div>
 
-                    <!-- Action Buttons Side-by-Side -->
-                    <div class="grid grid-cols-2 gap-3 pt-2">
-                        <button onclick="calculateRC()" class="bg-brand-600 hover:bg-brand-700 text-white font-semibold py-3 px-3 rounded-xl shadow transition duration-200 flex items-center justify-center space-x-2 text-sm">
+                    <!-- Action Button -->
+                    <div class="pt-2">
+                        <button onclick="calculateRC()" class="w-full bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800 text-white font-semibold py-3.5 px-4 rounded-2xl shadow-lg shadow-indigo-500/25 transition duration-200 flex items-center justify-center space-x-2 text-sm">
                             <i class="fa-solid fa-calculator"></i>
                             <span>คำนวณองค์อาคาร</span>
-                        </button>
-                        <button onclick="window.print()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-3 px-3 rounded-xl shadow transition duration-200 flex items-center justify-center space-x-2 text-sm">
-                            <i class="fa-solid fa-print"></i>
-                            <span>พิมพ์รายงาน A4</span>
                         </button>
                     </div>
                 </div>
 
                 <!-- Preview & Result Panel -->
                 <div class="lg:col-span-7 space-y-6">
-                    <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200">
-                        <h3 class="text-sm font-semibold text-slate-700 mb-3 flex items-center">
-                            <i class="fa-solid fa-layer-group text-brand-500 mr-2"></i> รูปตัดการเสริมเหล็ก (Cross Section SVG)
+                    <div class="glass-card p-5 rounded-3xl">
+                        <h3 class="text-xs font-bold text-slate-600 uppercase tracking-wider mb-3 flex items-center">
+                            <i class="fa-solid fa-layer-group text-indigo-500 mr-2"></i> รูปตัดการเสริมเหล็ก (Cross Section SVG)
                         </h3>
-                        <div id="rc-svg-wrapper" class="w-full h-64 bg-slate-800 rounded-lg overflow-hidden flex items-center justify-center p-2 relative">
+                        <div id="rc-svg-wrapper" class="w-full h-64 bg-slate-950 rounded-2xl overflow-hidden flex items-center justify-center p-2 relative shadow-inner border border-slate-800">
                             <!-- RC SVG Rendered Here -->
                         </div>
                     </div>
 
-                    <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 space-y-4">
-                        <div class="flex justify-between items-center border-b pb-3">
-                            <h3 class="font-semibold text-slate-800">สรุปการเสริมเหล็ก & กำลังรับน้ำหนัก</h3>
-                            <span id="rc-status-badge" class="px-3 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-700">PASS / ผ่านเกณฑ์</span>
+                    <div class="glass-card p-6 rounded-3xl space-y-4">
+                        <div class="flex justify-between items-center border-b border-slate-200/80 pb-3">
+                            <h3 class="font-bold text-slate-800 text-sm">สรุปการเสริมเหล็ก & กำลังรับน้ำหนัก</h3>
+                            <span id="rc-status-badge" class="px-3.5 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-700 border border-emerald-200">PASS / ผ่านเกณฑ์</span>
                         </div>
 
                         <div id="rc-result-summary" class="grid grid-cols-2 sm:grid-cols-3 gap-3">
                             <!-- RC Results Cards -->
                         </div>
 
-                        <div class="bg-slate-50 p-4 rounded-lg border border-slate-200">
-                            <h4 class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">ขั้นตอนการคำนวณวิธี SDM</h4>
+                        <div class="bg-slate-900/5 p-4 rounded-2xl border border-slate-200/80">
+                            <h4 class="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2">ขั้นตอนการคำนวณวิธี SDM</h4>
                             <div id="rc-calc-steps" class="text-xs font-mono space-y-1.5 text-slate-700 max-h-48 overflow-y-auto custom-scrollbar">
                                 <!-- Steps -->
                             </div>
@@ -302,12 +325,12 @@
 
     </main>
 
-    <div class="my-8 no-print text-center">
-        <p class="text-sm text-slate-500 mb-2"><i class="fa-solid fa-eye mr-1"></i> ตัวอย่างรายงานการคำนวณที่จะถูกพิมพ์ลงกระดาษ A4</p>
+    <div class="my-6 no-print text-center">
+        <p class="text-xs text-slate-400 font-medium"><i class="fa-solid fa-eye mr-1 text-indigo-500"></i> ตัวอย่างตัวอย่างรูปแบบรายงาน A4</p>
     </div>
 
     <!-- PRINTABLE A4 CONTAINER -->
-    <div id="printable-report" class="a4-preview mb-12">
+    <div id="printable-report" class="a4-preview mb-12 rounded-2xl">
         <!-- Header Sheet -->
         <div class="border-b-2 border-slate-800 pb-3 mb-4 flex justify-between items-start">
             <div>
@@ -337,7 +360,7 @@
                 </div>
                 <div class="col-span-7 space-y-1.5">
                     <h4 class="font-bold text-slate-800 text-xs border-b pb-1 flex items-center">
-                        <i class="fa-solid fa-list-check mr-1.5 text-brand-600"></i> ข้อกำหนดและคุณสมบัติวัสดุ (Design Specs)
+                        <i class="fa-solid fa-list-check mr-1.5 text-indigo-600"></i> ข้อกำหนดและคุณสมบัติวัสดุ (Design Specs)
                     </h4>
                     <div id="rpt-material-specs" class="grid grid-cols-1 gap-y-1 text-[11px]">
                         <!-- Material specs -->
@@ -348,7 +371,7 @@
             <!-- Mathematical Procedure & Substitution -->
             <div class="space-y-2 border p-3 rounded-lg bg-white">
                 <h4 class="font-bold text-slate-800 text-xs border-b pb-1 flex items-center">
-                    <i class="fa-solid fa-square-root-variable mr-1.5 text-brand-600"></i> ขั้นตอนการคำนวณและสูตรแสดงการแทนค่า (Detailed Calculation Steps)
+                    <i class="fa-solid fa-square-root-variable mr-1.5 text-indigo-600"></i> ขั้นตอนการคำนวณและสูตรแสดงการแทนค่า (Detailed Calculation Steps)
                 </h4>
                 <div id="rpt-calc-details" class="font-mono text-[11px] space-y-2 text-slate-800 leading-relaxed">
                     <!-- Detailed Equations and Substitutions -->
@@ -373,7 +396,7 @@
                 <p class="font-semibold text-slate-700">วิศวกรผู้ออกแบบ (Designed By)</p>
                 <div class="border-b border-dashed border-slate-400 w-3/4 mx-auto"></div>
                 <div>
-                    <p class="font-bold text-slate-800">(......................................................................)</p>
+                    <p class="font-bold text-slate-800">( นายช่างไผ่ )</p>
                     <p class="text-slate-500 text-[10px] mt-1">วิศวกรโยธาได้รับใบอนุญาต เลขที่ สย./ภก. ..................</p>
                 </div>
             </div>
@@ -414,7 +437,6 @@
             switchSteelSub('purlin');
             switchRCSub('beam');
 
-            // Close tooltips on outside click
             document.addEventListener('click', function(e) {
                 if (!e.target.closest('.tooltip-btn') && !e.target.closest('.tooltip-box')) {
                     document.querySelectorAll('.tooltip-box').forEach(el => el.classList.add('hidden'));
@@ -424,14 +446,14 @@
 
         function createLabelWithHelp(labelTitle, helpText, targetId) {
             return `
-                <div class="flex items-center justify-between mb-1">
-                    <label for="${targetId}" class="text-xs font-semibold text-slate-700">${labelTitle}</label>
+                <div class="flex items-center justify-between mb-1.5">
+                    <label for="${targetId}" class="text-xs font-medium text-slate-700">${labelTitle}</label>
                     <div class="relative inline-block">
-                        <button type="button" onclick="toggleHelp(event, '${targetId}-help')" class="tooltip-btn text-[10px] bg-slate-100 hover:bg-brand-500 hover:text-white text-slate-500 font-bold w-4 h-4 rounded-full border border-slate-300 flex items-center justify-center transition-colors">
+                        <button type="button" onclick="toggleHelp(event, '${targetId}-help')" class="tooltip-btn text-[10px] bg-slate-100 hover:bg-indigo-600 hover:text-white text-slate-400 font-bold w-4 h-4 rounded-full flex items-center justify-center transition-colors">
                             ?
                         </button>
-                        <div id="${targetId}-help" class="tooltip-box hidden absolute right-0 bottom-6 w-64 p-3 bg-slate-800 text-white text-[11px] rounded-lg shadow-xl z-50 leading-relaxed font-normal">
-                            <div class="flex justify-between items-start mb-1.5 font-bold border-b border-slate-700 pb-1 text-brand-300">
+                        <div id="${targetId}-help" class="tooltip-box hidden absolute right-0 bottom-6 w-64 p-3 bg-slate-900 text-white text-[11px] rounded-xl shadow-2xl z-50 leading-relaxed font-normal border border-slate-700">
+                            <div class="flex justify-between items-start mb-1.5 font-bold border-b border-slate-700 pb-1 text-indigo-300">
                                 <span><i class="fa-solid fa-circle-info mr-1"></i> คำอธิบายวิศวกรรม</span>
                                 <button type="button" onclick="toggleHelp(event, '${targetId}-help')" class="text-slate-400 hover:text-white">&times;</button>
                             </div>
@@ -471,12 +493,12 @@
         function switchSteelSub(sub) {
             currentSteelSub = sub;
             document.querySelectorAll('.sub-tab').forEach(btn => {
-                btn.classList.remove('bg-brand-500', 'text-white', 'shadow-sm');
-                btn.classList.add('bg-slate-200', 'text-slate-700');
+                btn.classList.remove('bg-indigo-600', 'text-white', 'shadow-md');
+                btn.classList.add('text-slate-600');
             });
             const activeBtn = document.getElementById(`btn-steel-${sub}`);
-            activeBtn.classList.remove('bg-slate-200', 'text-slate-700');
-            activeBtn.classList.add('bg-brand-500', 'text-white', 'shadow-sm');
+            activeBtn.classList.remove('text-slate-600');
+            activeBtn.classList.add('bg-indigo-600', 'text-white', 'shadow-md');
 
             renderSteelInputs();
             calculateSteel();
@@ -485,12 +507,12 @@
         function switchRCSub(sub) {
             currentRCSub = sub;
             document.querySelectorAll('.rc-sub-tab').forEach(btn => {
-                btn.classList.remove('bg-brand-500', 'text-white', 'shadow-sm');
-                btn.classList.add('bg-slate-200', 'text-slate-700');
+                btn.classList.remove('bg-indigo-600', 'text-white', 'shadow-md');
+                btn.classList.add('text-slate-600');
             });
             const activeBtn = document.getElementById(`btn-rc-${sub}`);
-            activeBtn.classList.remove('bg-slate-200', 'text-slate-700');
-            activeBtn.classList.add('bg-brand-500', 'text-white', 'shadow-sm');
+            activeBtn.classList.remove('text-slate-600');
+            activeBtn.classList.add('bg-indigo-600', 'text-white', 'shadow-md');
 
             renderRCInputs();
             calculateRC();
@@ -500,12 +522,14 @@
             const container = document.getElementById('steel-input-container');
             let html = '';
 
+            const inputClass = "w-full text-xs p-2.5 border border-slate-200/90 rounded-xl bg-slate-50/50 focus:bg-white focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all outline-none";
+
             if (currentSteelSub === 'purlin') {
                 html = `
                     <div class="grid grid-cols-2 gap-3">
                         <div>
                             ${createLabelWithHelp('วัสดุมุงหลังคา (Roof Sheet)', '<b>มาตรฐาน:</b> กฎกระทรวง ฉบับที่ 6 (พ.ศ.2527) / มอก.<br><b>ที่มาค่า:</b> สเปกผู้ผลิตแผ่นมุง เช่น เมทัลชีท 0.47mm (~6 kg/m²), ลอนคู่ (~15 kg/m²)<br><b>การนำไปใช้:</b> ใช้เป็นน้ำหนักบรรทุกคงที่ (Dead Load)', 'purlin-roof-weight')}
-                            <select id="purlin-roof-weight" class="w-full text-xs p-2.5 border rounded-lg bg-slate-50" onchange="calculateSteel()">
+                            <select id="purlin-roof-weight" class="${inputClass}" onchange="calculateSteel()">
                                 <option value="6">เมทัลชีท Metal Sheet (6 kg/m²)</option>
                                 <option value="15">กระเบื้องลอนคู่ (15 kg/m²)</option>
                                 <option value="45">กระเบื้องคอนกรีต CPAC (45 kg/m²)</option>
@@ -513,7 +537,7 @@
                         </div>
                         <div>
                             ${createLabelWithHelp('หน้าตัดเหล็กแป (Purlin)', '<b>มาตรฐาน:</b> มอก. 1228-2537 (เหล็กขึ้นรูปเย็น C-Channel)<br><b>ที่มาค่า:</b> ตารางคุณสมบัติเหล็กโครงสร้าง (Inertia Ix, Iy, Section Modulus Sx, Sy)<br><b>การคำนวณ:</b> ตรวจสอบความเค้นดัดสองแกน (Biaxial Bending)', 'purlin-profile')}
-                            <select id="purlin-profile" class="w-full text-xs p-2.5 border rounded-lg bg-slate-50" onchange="calculateSteel()">
+                            <select id="purlin-profile" class="${inputClass}" onchange="calculateSteel()">
                                 ${Object.keys(STEEL_PROFILES).filter(k => k.startsWith('C')).map(k => `<option value="${k}">${STEEL_PROFILES[k].name}</option>`).join('')}
                             </select>
                         </div>
@@ -521,34 +545,34 @@
                     <div class="grid grid-cols-2 gap-3">
                         <div>
                             ${createLabelWithHelp('ระยะห่างแป (Spacing S, m)', '<b>มาตรฐาน:</b> ข้อกำหนดผู้ผลิตแผ่นมุงหลังคาเพื่อป้องกันแผ่นแอ่น<br><b>ที่มาค่า:</b> แบบสถาปัตยกรรม/ระยะการยึดแผ่นมุง (ทั่วไป 1.0 - 1.5 m)<br><b>การคำนวณ:</b> แปลงโหลดพื้นที่ (kg/m²) เป็นโหลดเส้น (kg/m)', 'purlin-spacing')}
-                            <input type="number" id="purlin-spacing" value="1.0" step="0.1" class="w-full text-xs p-2.5 border rounded-lg bg-slate-50" oninput="calculateSteel()">
+                            <input type="number" id="purlin-spacing" value="1.0" step="0.1" class="${inputClass}" oninput="calculateSteel()">
                         </div>
                         <div>
                             ${createLabelWithHelp('ช่วงจันทัน (Span L, m)', '<b>มาตรฐาน:</b> ระยะพาดตามทฤษฎี Simple Beam / AISC ASD<br><b>ที่มาค่า:</b> ระยะห่างระหว่างโครงจันทัน หรือระยะช่องทรัสจากแบบวิศวกรรม<br><b>การคำนวณ:</b> ใช้คำนวณโมเมนต์สูงสุด M = wL²/8 และ Deflection', 'purlin-span')}
-                            <input type="number" id="purlin-span" value="4.0" step="0.5" class="w-full text-xs p-2.5 border rounded-lg bg-slate-50" oninput="calculateSteel()">
+                            <input type="number" id="purlin-span" value="4.0" step="0.5" class="${inputClass}" oninput="calculateSteel()">
                         </div>
                     </div>
                     <div class="grid grid-cols-2 gap-3">
                         <div>
                             ${createLabelWithHelp('ความชันหลังคา (Pitch, °)', '<b>มาตรฐาน:</b> หลักตรีโกณมิติทางวิศวกรรมโครงสร้าง<br><b>ที่มาค่า:</b> ความลาดเอียงหลังคาจากแบบสถาปัตยกรรม<br><b>การคำนวณ:</b> แตกแรงลงแกน X (Wx = DL sin θ) และแกน Y (Wy = DL cos θ)', 'purlin-angle')}
-                            <input type="number" id="purlin-angle" value="15" step="1" class="w-full text-xs p-2.5 border rounded-lg bg-slate-50" oninput="calculateSteel()">
+                            <input type="number" id="purlin-angle" value="15" step="1" class="${inputClass}" oninput="calculateSteel()">
                         </div>
                         <div>
                             ${createLabelWithHelp('แรงลม (Wind Load, kg/m²)', '<b>มาตรฐาน:</b> มยผ. 1311-50 / กฎกระทรวง ฉบับที่ 6<br><b>ที่มาค่า:</b> ความสูงอาคารและพื้นที่ภูมิประเทศ (อาคารต่ำกว่า 10m ใช้ 50 kg/m²)<br><b>การคำนวณ:</b> รวมกระทำตั้งฉากผืนหลังคาในแกน Y', 'purlin-wind')}
-                            <input type="number" id="purlin-wind" value="50" step="5" class="w-full text-xs p-2.5 border rounded-lg bg-slate-50" oninput="calculateSteel()">
+                            <input type="number" id="purlin-wind" value="50" step="5" class="${inputClass}" oninput="calculateSteel()">
                         </div>
                     </div>
                     <div class="grid grid-cols-2 gap-3">
                         <div>
                             ${createLabelWithHelp('กำลังเหล็ก Fy (kg/cm²)', '<b>มาตรฐาน:</b> มอก. 1228 / TIS / JIS G3101<br><b>ที่มาค่า:</b> ค่ากำลังครากขั้นต่ำของเหล็ก เช่น SS400 (Fy = 2,450 kg/cm²)<br><b>การคำนวณ:</b> กำหนดความเค้นดัดยอมให้ Fb = 0.60 x Fy (AISC ASD)', 'purlin-fy')}
-                            <select id="purlin-fy" class="w-full text-xs p-2.5 border rounded-lg bg-slate-50" onchange="calculateSteel()">
+                            <select id="purlin-fy" class="${inputClass}" onchange="calculateSteel()">
                                 <option value="2450">SS400 (Fy = 2,450 kg/cm²)</option>
                                 <option value="3200">SM400 (Fy = 3,200 kg/cm²)</option>
                             </select>
                         </div>
                         <div>
                             ${createLabelWithHelp('การค้ำยัน Sag Rod', '<b>มาตรฐาน:</b> AISC Manual of Steel Construction<br><b>ที่มาค่า:</b> การติดตั้งเหล็กดึงยึดระหว่างแปแปเหล็ก<br><b>ผลคำนวณ:</b> หากใส่ 1 จุด จะช่วยลดช่วงพาดดัดแกนอ่อนเหลือ L/2 ทำให้ My ลดลงมาก', 'purlin-sagrod')}
-                            <select id="purlin-sagrod" class="w-full text-xs p-2.5 border rounded-lg bg-slate-50" onchange="calculateSteel()">
+                            <select id="purlin-sagrod" class="${inputClass}" onchange="calculateSteel()">
                                 <option value="1">ใส่ Sag Rod 1 จุด (กึ่งกลาง)</option>
                                 <option value="0">ไม่ใส่ Sag Rod</option>
                             </select>
@@ -559,7 +583,7 @@
                 html = `
                     <div>
                         ${createLabelWithHelp('ทรงหลังคา (Roof Geometry)', '<b>มาตรฐาน:</b> หลักกลศาสตร์วิศวกรรม (Engineering Mechanics)<br><b>ที่มาค่า:</b> รูปทรงหลังคาจากแบบสถาปัตยกรรม (จั่ว/หมาแหงน)<br><b>ผลคำนวณ:</b> ใช้กำหนดรูปแบบการกระจายแรงและแตกแรงลงองค์อาคาร', 'rafter-roof-type')}
-                        <select id="rafter-roof-type" class="w-full text-xs p-2.5 border rounded-lg bg-slate-50" onchange="calculateSteel()">
+                        <select id="rafter-roof-type" class="${inputClass}" onchange="calculateSteel()">
                             <option value="gable">หลังคาทรงจั่ว (Gable Roof)</option>
                             <option value="lean">หลังคาทรงหมาแหงน (Lean-to Roof)</option>
                         </select>
@@ -567,27 +591,27 @@
                     <div class="grid grid-cols-2 gap-3">
                         <div>
                             ${createLabelWithHelp('ช่วงยาวจันทัน (Span L, m)', '<b>มาตรฐาน:</b> ทฤษฎีวิเคราะห์โครงสร้าง Beam Analysis<br><b>ที่มาค่า:</b> ระยะห่างระหว่างเสารับจันทันหรือคานรับโครงสร้าง<br><b>ผลคำนวณ:</b> คำนวณ M_max = wL²/8 และตรวจสอบการแอ่นตัว', 'rafter-span')}
-                            <input type="number" id="rafter-span" value="6.0" step="0.5" class="w-full text-xs p-2.5 border rounded-lg bg-slate-50" oninput="calculateSteel()">
+                            <input type="number" id="rafter-span" value="6.0" step="0.5" class="${inputClass}" oninput="calculateSteel()">
                         </div>
                         <div>
                             ${createLabelWithHelp('ระยะห่างโครง (Spacing, m)', '<b>มาตรฐาน:</b> แบบวางผังโครงหลังคา (Roof Framing Plan)<br><b>ที่มาค่า:</b> ระยะห่างระหว่างตัวจันทันหรือชุดโครงทรัส<br><b>ผลคำนวณ:</b> คำนวณ Trib. Area เพื่อแปลงโหลดกระจายพื้นที่เป็นยูนิฟอร์มโหลด', 'rafter-spacing')}
-                            <input type="number" id="rafter-spacing" value="4.0" step="0.5" class="w-full text-xs p-2.5 border rounded-lg bg-slate-50" oninput="calculateSteel()">
+                            <input type="number" id="rafter-spacing" value="4.0" step="0.5" class="${inputClass}" oninput="calculateSteel()">
                         </div>
                     </div>
                     <div>
                         ${createLabelWithHelp('หน้าตัดเหล็กจันทัน (Profile)', '<b>มาตรฐาน:</b> มอก. 1227-2558 (เหล็กโครงสร้างรูปพรรณรีดร้อน/ขึ้นรูป)<br><b>ที่มาค่า:</b> ขนาดเหล็ก Wide Flange, RHS, C-Channel ตามท้องตลาด<br><b>ผลคำนวณ:</b> ดึงค่า Sx, Ix และน้ำหนักตัวเองมาร่วมคำนวณ', 'rafter-profile')}
-                        <select id="rafter-profile" class="w-full text-xs p-2.5 border rounded-lg bg-slate-50" onchange="calculateSteel()">
+                        <select id="rafter-profile" class="${inputClass}" onchange="calculateSteel()">
                             ${Object.keys(STEEL_PROFILES).filter(k => k.startsWith('WF') || k.startsWith('RHS') || k.startsWith('C')).map(k => `<option value="${k}">${STEEL_PROFILES[k].name}</option>`).join('')}
                         </select>
                     </div>
                     <div class="grid grid-cols-2 gap-3">
                         <div>
                             ${createLabelWithHelp('น้ำหนักจร (Live Load, kg/m²)', '<b>มาตรฐาน:</b> กฎกระทรวง ฉบับที่ 6 / ข้อกำหนด ว.ส.ท.<br><b>ที่มาค่า:</b> น้ำหนักคนขึ้นซ่อมแซมหลังคา (หลังคาเอียงเกิน 15° ใช้ 30 kg/m²)<br><b>ผลคำนวณ:</b> นำไปรวมกับ Dead Load คิดความเค้นดัด', 'rafter-ll')}
-                            <input type="number" id="rafter-ll" value="30" step="5" class="w-full text-xs p-2.5 border rounded-lg bg-slate-50" oninput="calculateSteel()">
+                            <input type="number" id="rafter-ll" value="30" step="5" class="${inputClass}" oninput="calculateSteel()">
                         </div>
                         <div>
                             ${createLabelWithHelp('น้ำหนักคงที่ (Dead Load, kg/m²)', '<b>มาตรฐาน:</b> ว.ส.ท. / มยผ.<br><b>ที่มาค่า:</b> น้ำหนักวัสดุมุง + น้ำหนักแปเหล็ก + งานฝ้าเพดานแขวน<br><b>ผลคำนวณ:</b> รวมเป็นน้ำหนักบรรทุกคงที่ลงจันทัน', 'rafter-dl')}
-                            <input type="number" id="rafter-dl" value="25" step="5" class="w-full text-xs p-2.5 border rounded-lg bg-slate-50" oninput="calculateSteel()">
+                            <input type="number" id="rafter-dl" value="25" step="5" class="${inputClass}" oninput="calculateSteel()">
                         </div>
                     </div>
                 `;
@@ -596,7 +620,7 @@
                     <div class="grid grid-cols-2 gap-3">
                         <div>
                             ${createLabelWithHelp('รูปทรงทรัส (Truss Type)', '<b>มาตรฐาน:</b> การวิเคราะห์โครงหมุน Pin-Connected Truss<br><b>ที่มาค่า:</b> เลือกรูปแบบการจัดวางชิ้นส่วนถัก (Pratt, Howe, Warren, Fink)<br><b>ผลคำนวณ:</b> กำหนดรูปแบบการกระจายแรงดึง/แรงอัดในชิ้นส่วน', 'truss-type')}
-                            <select id="truss-type" class="w-full text-xs p-2.5 border rounded-lg bg-slate-50" onchange="calculateSteel()">
+                            <select id="truss-type" class="${inputClass}" onchange="calculateSteel()">
                                 <option value="pratt">Pratt Truss (พรัตต์)</option>
                                 <option value="howe">Howe Truss (ฮาว)</option>
                                 <option value="warren">Warren Truss (วอร์เรน)</option>
@@ -605,36 +629,36 @@
                         </div>
                         <div>
                             ${createLabelWithHelp('ช่วงกว้างทรัส (Span L, m)', '<b>มาตรฐาน:</b> ทฤษฎีวิเคราะห์โครงถัก (Truss Analysis)<br><b>ที่มาค่า:</b> ระยะพาดจากศูนย์กลางเสาถึงศูนย์กลางเสาอีกฝั่ง<br><b>ผลคำนวณ:</b> หาแรงภายในชิ้นส่วน Top/Bottom Chord และ Web Members', 'truss-span')}
-                            <input type="number" id="truss-span" value="12.0" step="1.0" class="w-full text-xs p-2.5 border rounded-lg bg-slate-50" oninput="calculateSteel()">
+                            <input type="number" id="truss-span" value="12.0" step="1.0" class="${inputClass}" oninput="calculateSteel()">
                         </div>
                     </div>
                     <div class="grid grid-cols-2 gap-3">
                         <div>
                             ${createLabelWithHelp('ความสูงทรัส (Height H, m)', '<b>มาตรฐาน:</b> อัตราส่วนความสูงต่อช่วงพาดแนะนำ (H/L ≈ 1/10 ถึง 1/6)<br><b>ที่มาค่า:</b> สถาปัตยกรรมและมุมความชันหลังคา<br><b>ผลคำนวณ:</b> ยิ่งสูง แรงอัดใน Top Chord ยิ่งลดลง', 'truss-height')}
-                            <input type="number" id="truss-height" value="1.8" step="0.1" class="w-full text-xs p-2.5 border rounded-lg bg-slate-50" oninput="calculateSteel()">
+                            <input type="number" id="truss-height" value="1.8" step="0.1" class="${inputClass}" oninput="calculateSteel()">
                         </div>
                         <div>
                             ${createLabelWithHelp('จำนวนช่อง (Panels N)', '<b>มาตรฐาน:</b> การซอยช่วงจุดต่อเพื่อรับแป (Joint Loading)<br><b>ที่มาค่า:</b> จำนวนช่วงแบ่งแนวนอนตามตำแหน่งวางแปเหล็ก<br><b>ผลคำนวณ:</b> คำนวณระยะพาดระหว่างจุดต่อของชิ้นส่วน', 'truss-panels')}
-                            <input type="number" id="truss-panels" value="6" min="4" max="12" class="w-full text-xs p-2.5 border rounded-lg bg-slate-50" oninput="calculateSteel()">
+                            <input type="number" id="truss-panels" value="6" min="4" max="12" class="${inputClass}" oninput="calculateSteel()">
                         </div>
                     </div>
                     <div class="grid grid-cols-2 gap-3">
                         <div>
                             ${createLabelWithHelp('เหล็กโครงบน/ล่าง (Chord)', '<b>มาตรฐาน:</b> มอก. 107-2533 / มอก. 1227<br><b>ที่มาค่า:</b> เหล็กกล่องเหลี่ยม SHS หรือ ท่อเหล็ก/ฉากคู่<br><b>ผลคำนวณ:</b> เช็กกำลังรับแรงอัดยอมให้ Fa = 0.55Fy (AISC ASD)', 'truss-chord-profile')}
-                            <select id="truss-chord-profile" class="w-full text-xs p-2.5 border rounded-lg bg-slate-50" onchange="calculateSteel()">
+                            <select id="truss-chord-profile" class="${inputClass}" onchange="calculateSteel()">
                                 ${Object.keys(STEEL_PROFILES).filter(k => k.startsWith('SHS') || k.startsWith('L') || k.startsWith('RHS')).map(k => `<option value="${k}">${STEEL_PROFILES[k].name}</option>`).join('')}
                             </select>
                         </div>
                         <div>
                             ${createLabelWithHelp('เหล็กแนวถัก (Web)', '<b>มาตรฐาน:</b> มอก. 107-2533 / มอก. 1227<br><b>ที่มาค่า:</b> ขนาดเหล็กแนวตั้งและแนวเฉียงภายในโครงถัก<br><b>ผลคำนวณ:</b> ตรวจสอบกำลังรับแรงดึงและแรงอัดทางเฉียง', 'truss-web-profile')}
-                            <select id="truss-web-profile" class="w-full text-xs p-2.5 border rounded-lg bg-slate-50" onchange="calculateSteel()">
+                            <select id="truss-web-profile" class="${inputClass}" onchange="calculateSteel()">
                                 ${Object.keys(STEEL_PROFILES).filter(k => k.startsWith('L') || k.startsWith('SHS') || k.startsWith('PIPE')).map(k => `<option value="${k}">${STEEL_PROFILES[k].name}</option>`).join('')}
                             </select>
                         </div>
                     </div>
                     <div>
                         ${createLabelWithHelp('แรงลงจุดต่อ (Nodal P, kg)', '<b>มาตรฐาน:</b> การแปลงกระจายโหลดลง Node (Point Load Calculation)<br><b>ที่มาค่า:</b> คำนวณจาก (Dead Load + Live Load) x ระยะห่างทรัส x ระยะห่างแป<br><b>ผลคำนวณ:</b> ป้อนแรงเข้าจุดต่อข้อหมุนเพื่อหาแรงในชิ้นส่วน', 'truss-load')}
-                        <input type="number" id="truss-load" value="450" step="50" class="w-full text-xs p-2.5 border rounded-lg bg-slate-50" oninput="calculateSteel()">
+                        <input type="number" id="truss-load" value="450" step="50" class="${inputClass}" oninput="calculateSteel()">
                     </div>
                 `;
             } else if (currentSteelSub === 'connection') {
@@ -642,24 +666,24 @@
                     <div class="grid grid-cols-2 gap-3">
                         <div>
                             ${createLabelWithHelp('ประเภทจุดต่อ (Connection)', '<b>มาตรฐาน:</b> AISC Specification for Structural Steel Buildings<br><b>ที่มาค่า:</b> รูปแบบการยึดต่อในแบบรายละเอียด (รอยเชื่อมฟิลเล็ท หรือ น็อตเอว)<br><b>ผลคำนวณ:</b> เลือกสมการคำนวณกำลังรับแรงเฉือนและแรงดึง', 'conn-type')}
-                            <select id="conn-type" class="w-full text-xs p-2.5 border rounded-lg bg-slate-50" onchange="calculateSteel()">
+                            <select id="conn-type" class="${inputClass}" onchange="calculateSteel()">
                                 <option value="weld">รอยเชื่อม Fillet Weld</option>
                                 <option value="bolt">จุดต่อสลักเกลียว (Bolt)</option>
                             </select>
                         </div>
                         <div>
                             ${createLabelWithHelp('แรงออกแบบ (Pu, kg)', '<b>มาตรฐาน:</b> ผลการวิเคราะห์แรงจากโครงสร้าง (Truss/Frame Analysis)<br><b>ที่มาค่า:</b> แรงดึงหรือแรงอัดสูงสุด ณ ปลายชิ้นส่วน<br><b>ผลคำนวณ:</b> ใช้เปรียบเทียบกับกำลังรับแรงสูงสุดของจุดต่อ', 'conn-force')}
-                            <input type="number" id="conn-force" value="5500" step="500" class="w-full text-xs p-2.5 border rounded-lg bg-slate-50" oninput="calculateSteel()">
+                            <input type="number" id="conn-force" value="5500" step="500" class="${inputClass}" oninput="calculateSteel()">
                         </div>
                     </div>
                     <div class="grid grid-cols-2 gap-3">
                         <div>
                             ${createLabelWithHelp('ขนาดรอยเชื่อม (Weld, mm)', '<b>มาตรฐาน:</b> AWS D1.1 Structural Welding Code<br><b>ที่มาค่า:</b> ความหนาขาเชื่อม Fillet Weld Leg Size (mm)<br><b>ผลคำนวณ:</b> คิดคอเชื่อมประสิทธิผล t_eff = 0.707 x Leg และความเค้น Fw = 0.30 x E70', 'conn-weld-size')}
-                            <input type="number" id="conn-weld-size" value="6" step="1" class="w-full text-xs p-2.5 border rounded-lg bg-slate-50" oninput="calculateSteel()">
+                            <input type="number" id="conn-weld-size" value="6" step="1" class="${inputClass}" oninput="calculateSteel()">
                         </div>
                         <div>
                             ${createLabelWithHelp('ขนาดน็อต (Bolt Size)', '<b>มาตรฐาน:</b> ASTM A325 / ISO 898-1 (High Strength Bolt)<br><b>ที่มาค่า:</b> ขนาดเส้นผ่านศูนย์กลางสลักเกลียวยึดจุดต่อ (M12, M16, M20)<br><b>ผลคำนวณ:</b> คิดพื้นที่รับแรงเฉือน A_b และความเค้นเฉือนยอมให้ Fnv', 'conn-bolt-dia')}
-                            <select id="conn-bolt-dia" class="w-full text-xs p-2.5 border rounded-lg bg-slate-50" onchange="calculateSteel()">
+                            <select id="conn-bolt-dia" class="${inputClass}" onchange="calculateSteel()">
                                 <option value="12">M12 (Ø 12 mm)</option>
                                 <option value="16" selected>M16 (Ø 16 mm)</option>
                                 <option value="20">M20 (Ø 20 mm)</option>
@@ -674,37 +698,38 @@
         function renderRCInputs() {
             const container = document.getElementById('rc-input-container');
             let html = '';
+            const inputClass = "w-full text-xs p-2.5 border border-slate-200/90 rounded-xl bg-slate-50/50 focus:bg-white focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all outline-none";
 
             if (currentRCSub === 'beam') {
                 html = `
                     <div class="grid grid-cols-2 gap-3">
                         <div>
                             ${createLabelWithHelp('ความกว้างคาน b (cm)', '<b>มาตรฐาน:</b> ข้อกำหนดมิติหน้าตัด ACI 318 / ว.ส.ท.<br><b>ที่มาค่า:</b> ขนาดความกว้างคานตามแบบสถาปัตยกรรม (ทั่วไป 15-30 cm)<br><b>ผลคำนวณ:</b> ใช้คำนวณกำลังรับแรงดัด Rn = Mu/(φ b d²) และแรงเฉือน', 'rc-b')}
-                            <input type="number" id="rc-b" value="20" class="w-full text-xs p-2.5 border rounded-lg bg-slate-50" oninput="calculateRC()">
+                            <input type="number" id="rc-b" value="20" class="${inputClass}" oninput="calculateRC()">
                         </div>
                         <div>
                             ${createLabelWithHelp('ความลึกคาน h (cm)', '<b>มาตรฐาน:</b> เกณฑ์ความลึกขั้นต่ำกันการแอ่นตัว L/16 (ACI 318 Table 9.3.1.1)<br><b>ที่มาค่า:</b> แบบสถาปัตยกรรม/โครงสร้าง<br><b>ผลคำนวณ:</b> ลบระยะระยะคอนกรีตหุ้ม (Covering) ได้ความลึกประสิทธิผล d', 'rc-h')}
-                            <input type="number" id="rc-h" value="40" class="w-full text-xs p-2.5 border rounded-lg bg-slate-50" oninput="calculateRC()">
+                            <input type="number" id="rc-h" value="40" class="${inputClass}" oninput="calculateRC()">
                         </div>
                     </div>
                     <div class="grid grid-cols-2 gap-3">
                         <div>
                             ${createLabelWithHelp('โมเมนต์ Mu (kg.m)', '<b>มาตรฐาน:</b> การรวมน้ำหนักเพิ่มพูนตาม SDM (U = 1.4DL + 1.7LL)<br><b>ที่มาค่า:</b> ผลวิเคราะห์โครงสร้างคาน (Beam Structural Analysis)<br><b>ผลคำนวณ:</b> ป้อนหาพื้นที่เหล็กเสริมรับแรงดึง As', 'rc-mu')}
-                            <input type="number" id="rc-mu" value="4500" class="w-full text-xs p-2.5 border rounded-lg bg-slate-50" oninput="calculateRC()">
+                            <input type="number" id="rc-mu" value="4500" class="${inputClass}" oninput="calculateRC()">
                         </div>
                         <div>
                             ${createLabelWithHelp('แรงเฉือน Vu (kg)', '<b>มาตรฐาน:</b> การวิเคราะห์แรงเฉือนเพิ่มพูน (Factored Shear Force)<br><b>ที่มาค่า:</b> ผลวิเคราะห์แรงเฉือนที่ขอบจุดรองรับคาน<br><b>ผลคำนวณ:</b> ใช้คำนวณออกแบบเหล็กปลอกคาน (Stirrups)', 'rc-vu')}
-                            <input type="number" id="rc-vu" value="3200" class="w-full text-xs p-2.5 border rounded-lg bg-slate-50" oninput="calculateRC()">
+                            <input type="number" id="rc-vu" value="3200" class="${inputClass}" oninput="calculateRC()">
                         </div>
                     </div>
                     <div class="grid grid-cols-2 gap-3">
                         <div>
                             ${createLabelWithHelp("fc' คอนกรีต (kg/cm²)", '<b>มาตรฐาน:</b> ASTM C39 (Cylinder) / มอก. 213-2552<br><b>ที่มาค่า:</b> ค่ากำลังอัดประดัยน์ของคอนกรีตที่อายุ 28 วัน จากแพล้นท์คอนกรีตสด<br><b>ผลคำนวณ:</b> ใช้หาหน่วยแรงอัดในบล็อกความเค้น (Whitney Stress Block 0.85fc\')', 'rc-fc')}
-                            <input type="number" id="rc-fc" value="240" class="w-full text-xs p-2.5 border rounded-lg bg-slate-50" oninput="calculateRC()">
+                            <input type="number" id="rc-fc" value="240" class="${inputClass}" oninput="calculateRC()">
                         </div>
                         <div>
                             ${createLabelWithHelp('Fy เหล็กเสริม (kg/cm²)', '<b>มาตรฐาน:</b> มอก. 24-2559 (เหล็กข้ออ้อย SD30 / SD40 / SD50)<br><b>ที่มาค่า:</b> ผลทดสอบแรงดึงเหล็ก หรือมาตรฐานชนิดเหล็กที่เลือกใช้<br><b>ผลคำนวณ:</b> ใช้คำนวณอัตราส่วนเหล็กเสริมสูงสุด/ขั้นต่ำ (ρ_max, ρ_min)', 'rc-fy')}
-                            <select id="rc-fy" class="w-full text-xs p-2.5 border rounded-lg bg-slate-50" onchange="calculateRC()">
+                            <select id="rc-fy" class="${inputClass}" onchange="calculateRC()">
                                 <option value="3000">SD30 (Fy = 3,000 kg/cm²)</option>
                                 <option value="4000" selected>SD40 (Fy = 4,000 kg/cm²)</option>
                             </select>
@@ -713,17 +738,17 @@
                 `;
             } else {
                 html = `
-                    <div class="p-3 bg-slate-100 rounded-lg text-xs text-slate-600 border border-slate-200">
-                        <i class="fa-solid fa-circle-info mr-1 text-brand-500"></i> กำหนดค่าพารามิเตอร์การออกแบบ ค.ส.ล. ตามมาตรฐาน SDM ACI-318
+                    <div class="p-3 bg-indigo-50/60 rounded-xl text-xs text-indigo-800 border border-indigo-100">
+                        <i class="fa-solid fa-circle-info mr-1 text-indigo-600"></i> กำหนดค่าพารามิเตอร์การออกแบบ ค.ส.ล. ตามมาตรฐาน SDM ACI-318
                     </div>
                     <div class="grid grid-cols-2 gap-3">
                         <div>
                             ${createLabelWithHelp('น้ำหนักบรรทุก Pu (kg)', '<b>มาตรฐาน:</b> สมการรวมน้ำหนักเพิ่มพูน SDM (U = 1.4DL + 1.7LL)<br><b>ที่มาค่า:</b> ผลวิเคราะห์แรงถ่ายลงเสา/ฐานราก (Column Axial Load Analysis)<br><b>ผลคำนวณ:</b> เช็กกำลังรับแรงอัดตามแกนและออกแบบเหล็กเสริม', 'rc-pu')}
-                            <input type="number" id="rc-pu" value="18000" class="w-full text-xs p-2.5 border rounded-lg bg-slate-50" oninput="calculateRC()">
+                            <input type="number" id="rc-pu" value="18000" class="${inputClass}" oninput="calculateRC()">
                         </div>
                         <div>
                             ${createLabelWithHelp('ขนาดหน้าตัด (cm)', '<b>มาตรฐาน:</b> ข้อกำหนดขนาดเสา/ฐานรากขั้นต่ำตามมาตรฐาน ว.ส.ท.<br><b>ที่มาค่า:</b> แบบรายละเอียดโครงสร้างสถาปัตยกรรม<br><b>ผลคำนวณ:</b> ใช้หาพื้นที่หน้าตัดคอนกรีต Gross Area (Ag)', 'rc-dim')}
-                            <input type="number" id="rc-dim" value="25" class="w-full text-xs p-2.5 border rounded-lg bg-slate-50" oninput="calculateRC()">
+                            <input type="number" id="rc-dim" value="25" class="${inputClass}" oninput="calculateRC()">
                         </div>
                     </div>
                 `;
@@ -739,6 +764,8 @@
             let rptMaterial = '';
             let rptCalcDetails = '';
 
+            const cardClass = "bg-white p-3.5 rounded-2xl border border-slate-200/80 shadow-sm";
+
             if (currentSteelSub === 'purlin') {
                 const roofW = parseFloat(document.getElementById('purlin-roof-weight').value) || 6;
                 const profKey = document.getElementById('purlin-profile').value;
@@ -751,41 +778,41 @@
                 const sagrod = parseInt(document.getElementById('purlin-sagrod').value) || 1;
 
                 const rad = angleDeg * Math.PI / 180;
-                const dl = roofW * spacing + prof.weight; // kg/m
-                const wl = wind * spacing; // kg/m
+                const dl = roofW * spacing + prof.weight;
+                const wl = wind * spacing;
 
-                const wx = dl * Math.sin(rad); // kg/m
-                const wy = dl * Math.cos(rad) + wl; // kg/m
+                const wx = dl * Math.sin(rad);
+                const wy = dl * Math.cos(rad) + wl;
 
-                const Mx = (wy * Math.pow(span, 2)) / 8 * 100; // kg.cm
+                const Mx = (wy * Math.pow(span, 2)) / 8 * 100;
                 const spanY = sagrod === 1 ? span / 2 : span;
-                const My = (wx * Math.pow(spanY, 2)) / 8 * 100; // kg.cm
+                const My = (wx * Math.pow(spanY, 2)) / 8 * 100;
 
-                const Fb = 0.60 * fy; // Allowable Bending Stress ASD
+                const Fb = 0.60 * fy;
                 const fbx = Mx / prof.Sx;
                 const fby = My / prof.Sy;
                 const csi = (fbx / Fb) + (fby / Fb);
 
-                const E = 2000000; // kg/cm²
-                const wy_kg_cm = wy / 100; // kg/cm
-                const L_cm = span * 100; // cm
+                const E = 2000000;
+                const wy_kg_cm = wy / 100;
+                const L_cm = span * 100;
                 const delta = (5 * wy_kg_cm * Math.pow(L_cm, 4)) / (384 * E * prof.Ix);
                 const allowDelta = L_cm / 180;
 
                 if (csi > 1.0 || delta > allowDelta) pass = false;
 
                 summaryHTML = `
-                    <div class="bg-slate-50 p-3 rounded-lg border">
-                        <div class="text-[11px] text-slate-500">Combined Stress Index</div>
-                        <div class="text-lg font-bold ${csi <= 1.0 ? 'text-emerald-600' : 'text-red-600'}">${csi.toFixed(3)} / 1.000</div>
+                    <div class="${cardClass}">
+                        <div class="text-[11px] text-slate-500 font-medium">Combined Stress Index</div>
+                        <div class="text-base font-bold ${csi <= 1.0 ? 'text-emerald-600' : 'text-red-600'}">${csi.toFixed(3)} / 1.000</div>
                     </div>
-                    <div class="bg-slate-50 p-3 rounded-lg border">
-                        <div class="text-[11px] text-slate-500">ความเค้นดัด fbx</div>
-                        <div class="text-lg font-bold text-slate-800">${fbx.toFixed(1)} kg/cm²</div>
+                    <div class="${cardClass}">
+                        <div class="text-[11px] text-slate-500 font-medium">ความเค้นดัด fbx</div>
+                        <div class="text-base font-bold text-slate-800">${fbx.toFixed(1)} kg/cm²</div>
                     </div>
-                    <div class="bg-slate-50 p-3 rounded-lg border">
-                        <div class="text-[11px] text-slate-500">การแอ่นตัว (Deflection)</div>
-                        <div class="text-lg font-bold ${delta <= allowDelta ? 'text-emerald-600' : 'text-red-600'}">${delta.toFixed(2)} cm (&le; ${allowDelta.toFixed(2)})</div>
+                    <div class="${cardClass}">
+                        <div class="text-[11px] text-slate-500 font-medium">การแอ่นตัว (Deflection)</div>
+                        <div class="text-base font-bold ${delta <= allowDelta ? 'text-emerald-600' : 'text-red-600'}">${delta.toFixed(2)} cm (&le; ${allowDelta.toFixed(2)})</div>
                     </div>
                 `;
 
@@ -801,7 +828,7 @@
 
                 svgContent = `
                     <svg viewBox="0 0 400 200" class="w-full h-full">
-                        <rect x="0" y="0" width="400" height="200" fill="#0f172a"/>
+                        <rect x="0" y="0" width="400" height="200" fill="#090d16"/>
                         <line x1="40" y1="160" x2="360" y2="70" stroke="#38bdf8" stroke-width="4"/>
                         <path d="M 100 135 L 100 115 L 120 115 L 120 120 L 105 120 L 105 135 Z" fill="#f59e0b" stroke="#f59e0b"/>
                         <path d="M 200 105 L 200 85 L 220 85 L 220 90 L 205 90 L 205 105 Z" fill="#f59e0b" stroke="#f59e0b"/>
@@ -857,8 +884,8 @@
                 const ll = parseFloat(document.getElementById('rafter-ll').value) || 30;
                 const dl = parseFloat(document.getElementById('rafter-dl').value) || 25;
 
-                const w = (dl + ll) * spacing + prof.weight; // kg/m
-                const M = (w * Math.pow(span, 2)) / 8 * 100; // kg.cm
+                const w = (dl + ll) * spacing + prof.weight;
+                const M = (w * Math.pow(span, 2)) / 8 * 100;
                 const Fb = 0.60 * 2450;
                 const fb = M / prof.Sx;
                 const csi = fb / Fb;
@@ -866,17 +893,17 @@
                 if (csi > 1.0) pass = false;
 
                 summaryHTML = `
-                    <div class="bg-slate-50 p-3 rounded-lg border">
-                        <div class="text-[11px] text-slate-500">โมเมนต์ดัดสูงสุด (M)</div>
-                        <div class="text-lg font-bold text-slate-800">${(M/100).toFixed(0)} kg.m</div>
+                    <div class="${cardClass}">
+                        <div class="text-[11px] text-slate-500 font-medium">โมเมนต์ดัดสูงสุด (M)</div>
+                        <div class="text-base font-bold text-slate-800">${(M/100).toFixed(0)} kg.m</div>
                     </div>
-                    <div class="bg-slate-50 p-3 rounded-lg border">
-                        <div class="text-[11px] text-slate-500">ความเค้นดัด (fb)</div>
-                        <div class="text-lg font-bold text-slate-800">${fb.toFixed(1)} kg/cm²</div>
+                    <div class="${cardClass}">
+                        <div class="text-[11px] text-slate-500 font-medium">ความเค้นดัด (fb)</div>
+                        <div class="text-base font-bold text-slate-800">${fb.toFixed(1)} kg/cm²</div>
                     </div>
-                    <div class="bg-slate-50 p-3 rounded-lg border">
-                        <div class="text-[11px] text-slate-500">อัตราส่วนความเค้น (CSI)</div>
-                        <div class="text-lg font-bold ${csi <= 1.0 ? 'text-emerald-600' : 'text-red-600'}">${csi.toFixed(3)} / 1.000</div>
+                    <div class="${cardClass}">
+                        <div class="text-[11px] text-slate-500 font-medium">อัตราส่วนความเค้น (CSI)</div>
+                        <div class="text-base font-bold ${csi <= 1.0 ? 'text-emerald-600' : 'text-red-600'}">${csi.toFixed(3)} / 1.000</div>
                     </div>
                 `;
 
@@ -889,7 +916,7 @@
 
                 svgContent = `
                     <svg viewBox="0 0 400 200" class="w-full h-full">
-                        <rect x="0" y="0" width="400" height="200" fill="#0f172a"/>
+                        <rect x="0" y="0" width="400" height="200" fill="#090d16"/>
                         <polygon points="50,150 200,80 350,150" fill="none" stroke="#38bdf8" stroke-width="4"/>
                         <line x1="50" y1="150" x2="350" y2="150" stroke="#f59e0b" stroke-width="2" stroke-dasharray="4"/>
                         <text x="200" y="50" fill="#f8fafc" font-size="12" font-weight="bold" text-anchor="middle">จันทัน/คานเหล็ก ${prof.name} Span ${span}m</text>
@@ -923,21 +950,21 @@
                 const chordProf = STEEL_PROFILES[chordKey] || STEEL_PROFILES['SHS75x75x2.3'];
                 const P = parseFloat(document.getElementById('truss-load').value) || 450;
 
-                const maxAxialCompress = (P * span) / (2 * height); // kg
-                const Fa = 0.55 * 2450; // Allowable Compression
+                const maxAxialCompress = (P * span) / (2 * height);
+                const Fa = 0.55 * 2450;
                 const fa = maxAxialCompress / chordProf.area;
                 const csi = fa / Fa;
 
                 if (csi > 1.0) pass = false;
 
                 summaryHTML = `
-                    <div class="bg-slate-50 p-3 rounded-lg border">
-                        <div class="text-[11px] text-slate-500">แรงอัดสูงสุด Top Chord (P)</div>
-                        <div class="text-lg font-bold text-slate-800">${maxAxialCompress.toFixed(0)} kg</div>
+                    <div class="${cardClass}">
+                        <div class="text-[11px] text-slate-500 font-medium">แรงอัดสูงสุด Top Chord (P)</div>
+                        <div class="text-base font-bold text-slate-800">${maxAxialCompress.toFixed(0)} kg</div>
                     </div>
-                    <div class="bg-slate-50 p-3 rounded-lg border">
-                        <div class="text-[11px] text-slate-500">อัตราส่วนความเค้น (fa/Fa)</div>
-                        <div class="text-lg font-bold ${csi <= 1.0 ? 'text-emerald-600' : 'text-red-600'}">${csi.toFixed(3)} / 1.000</div>
+                    <div class="${cardClass}">
+                        <div class="text-[11px] text-slate-500 font-medium">อัตราส่วนความเค้น (fa/Fa)</div>
+                        <div class="text-base font-bold ${csi <= 1.0 ? 'text-emerald-600' : 'text-red-600'}">${csi.toFixed(3)} / 1.000</div>
                     </div>
                 `;
 
@@ -950,7 +977,7 @@
 
                 svgContent = `
                     <svg viewBox="0 0 400 200" class="w-full h-full">
-                        <rect x="0" y="0" width="400" height="200" fill="#0f172a"/>
+                        <rect x="0" y="0" width="400" height="200" fill="#090d16"/>
                         <polyline points="40,150 200,50 360,150" fill="none" stroke="#38bdf8" stroke-width="3"/>
                         <line x1="40" y1="150" x2="360" y2="150" stroke="#38bdf8" stroke-width="3"/>
                         <line x1="120" y1="150" x2="120" y2="100" stroke="#f59e0b" stroke-width="2"/>
@@ -997,30 +1024,30 @@
 
                 let cap = 0;
                 if (connType === 'weld') {
-                    const throat = 0.707 * (weldSize / 10); // cm
-                    const Fw = 0.30 * 4000; // kg/cm² (E70 electrode)
-                    cap = throat * Fw * 15; // kg (assuming length 15 cm)
+                    const throat = 0.707 * (weldSize / 10);
+                    const Fw = 0.30 * 4000;
+                    cap = throat * Fw * 15;
                 } else {
-                    const Ab = Math.PI * Math.pow(boltDia / 20, 2); // cm²
-                    const Fnv = 1050; // kg/cm²
-                    cap = 2 * Ab * Fnv; // 2 bolts shear
+                    const Ab = Math.PI * Math.pow(boltDia / 20, 2);
+                    const Fnv = 1050;
+                    cap = 2 * Ab * Fnv;
                 }
 
                 const ratio = Pu / cap;
                 if (ratio > 1.0) pass = false;
 
                 summaryHTML = `
-                    <div class="bg-slate-50 p-3 rounded-lg border">
-                        <div class="text-[11px] text-slate-500">แรงออกแบบ (Pu)</div>
-                        <div class="text-lg font-bold text-slate-800">${Pu} kg</div>
+                    <div class="${cardClass}">
+                        <div class="text-[11px] text-slate-500 font-medium">แรงออกแบบ (Pu)</div>
+                        <div class="text-base font-bold text-slate-800">${Pu} kg</div>
                     </div>
-                    <div class="bg-slate-50 p-3 rounded-lg border">
-                        <div class="text-[11px] text-slate-500">กำลังรับแรงจุดต่อ (Capacity)</div>
-                        <div class="text-lg font-bold text-slate-800">${cap.toFixed(0)} kg</div>
+                    <div class="${cardClass}">
+                        <div class="text-[11px] text-slate-500 font-medium">กำลังรับแรงจุดต่อ (Capacity)</div>
+                        <div class="text-base font-bold text-slate-800">${cap.toFixed(0)} kg</div>
                     </div>
-                    <div class="bg-slate-50 p-3 rounded-lg border">
-                        <div class="text-[11px] text-slate-500">อัตราส่วนกำลัง (Pu/Cap)</div>
-                        <div class="text-lg font-bold ${ratio <= 1.0 ? 'text-emerald-600' : 'text-red-600'}">${ratio.toFixed(3)} / 1.000</div>
+                    <div class="${cardClass}">
+                        <div class="text-[11px] text-slate-500 font-medium">อัตราส่วนกำลัง (Pu/Cap)</div>
+                        <div class="text-base font-bold ${ratio <= 1.0 ? 'text-emerald-600' : 'text-red-600'}">${ratio.toFixed(3)} / 1.000</div>
                     </div>
                 `;
 
@@ -1033,7 +1060,7 @@
 
                 svgContent = `
                     <svg viewBox="0 0 400 200" class="w-full h-full">
-                        <rect x="0" y="0" width="400" height="200" fill="#0f172a"/>
+                        <rect x="0" y="0" width="400" height="200" fill="#090d16"/>
                         <rect x="120" y="70" width="160" height="60" fill="#334155" stroke="#38bdf8" stroke-width="2"/>
                         <circle cx="160" cy="100" r="10" fill="#f59e0b"/>
                         <circle cx="240" cy="100" r="10" fill="#f59e0b"/>
@@ -1059,7 +1086,7 @@
                 document.getElementById('rpt-title').innerText = "4. รายการคำนวณจุดต่อและรอยเชื่อม (Connection Design)";
             }
 
-            document.getElementById('steel-status-badge').className = pass ? "px-3 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-700" : "px-3 py-1 rounded-full text-xs font-bold bg-red-100 text-red-700";
+            document.getElementById('steel-status-badge').className = pass ? "px-3.5 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-700 border border-emerald-200" : "px-3.5 py-1 rounded-full text-xs font-bold bg-red-100 text-red-700 border border-red-200";
             document.getElementById('steel-status-badge').innerText = pass ? "PASS / ผ่านเกณฑ์" : "FAIL / ไม่ผ่านเกณฑ์";
             document.getElementById('steel-result-summary').innerHTML = summaryHTML;
             document.getElementById('steel-calc-steps').innerHTML = stepsHTML;
@@ -1080,16 +1107,18 @@
             let rptMaterial = '';
             let rptCalcDetails = '';
 
+            const cardClass = "bg-white p-3.5 rounded-2xl border border-slate-200/80 shadow-sm";
+
             if (currentRCSub === 'beam') {
                 const b = parseFloat(document.getElementById('rc-b').value) || 20;
                 const h = parseFloat(document.getElementById('rc-h').value) || 40;
-                const Mu = (parseFloat(document.getElementById('rc-mu').value) || 4500) * 100; // kg.cm
+                const Mu = (parseFloat(document.getElementById('rc-mu').value) || 4500) * 100;
                 const Vu = parseFloat(document.getElementById('rc-vu').value) || 3200;
                 const fc = parseFloat(document.getElementById('rc-fc').value) || 240;
                 const fy = parseFloat(document.getElementById('rc-fy').value) || 4000;
 
-                const d = h - 4.0; // Effective depth
-                const phi = 0.90; // Strength reduction factor for bending
+                const d = h - 4.0;
+                const phi = 0.90;
                 const beta1 = 0.85;
 
                 const Rn = Mu / (phi * b * Math.pow(d, 2));
@@ -1103,13 +1132,13 @@
                 if (rho > rhoMax) pass = false;
 
                 summaryHTML = `
-                    <div class="bg-slate-50 p-3 rounded-lg border">
-                        <div class="text-[11px] text-slate-500">เนื้อที่เหล็กรับแรงดึง (As)</div>
-                        <div class="text-lg font-bold text-brand-600">${As.toFixed(2)} cm²</div>
+                    <div class="${cardClass}">
+                        <div class="text-[11px] text-slate-500 font-medium">เนื้อที่เหล็กรับแรงดึง (As)</div>
+                        <div class="text-base font-bold text-indigo-600">${As.toFixed(2)} cm²</div>
                     </div>
-                    <div class="bg-slate-50 p-3 rounded-lg border">
-                        <div class="text-[11px] text-slate-500">เหล็กเสริมที่แนะนำ</div>
-                        <div class="text-lg font-bold text-slate-800">2 - DB16 (${(2*2.01).toFixed(2)} cm²)</div>
+                    <div class="${cardClass}">
+                        <div class="text-[11px] text-slate-500 font-medium">เหล็กเสริมที่แนะนำ</div>
+                        <div class="text-base font-bold text-slate-800">2 - DB16 (${(2*2.01).toFixed(2)} cm²)</div>
                     </div>
                 `;
 
@@ -1122,8 +1151,8 @@
 
                 svgContent = `
                     <svg viewBox="0 0 400 200" class="w-full h-full">
-                        <rect x="0" y="0" width="400" height="200" fill="#1e293b"/>
-                        <rect x="150" y="30" width="100" height="140" fill="#64748b" stroke="#94a3b8" stroke-width="2"/>
+                        <rect x="0" y="0" width="400" height="200" fill="#090d16"/>
+                        <rect x="150" y="30" width="100" height="140" fill="#334155" stroke="#64748b" stroke-width="2"/>
                         <rect x="160" y="40" width="80" height="120" fill="none" stroke="#ef4444" stroke-width="2" rx="4"/>
                         <circle cx="172" cy="148" r="6" fill="#f59e0b"/>
                         <circle cx="228" cy="148" r="6" fill="#f59e0b"/>
@@ -1161,13 +1190,13 @@
                 const dim = parseFloat(document.getElementById('rc-dim').value) || 25;
 
                 summaryHTML = `
-                    <div class="bg-slate-50 p-3 rounded-lg border">
-                        <div class="text-[11px] text-slate-500">น้ำหนักบรรทุก (Pu)</div>
-                        <div class="text-lg font-bold text-slate-800">${Pu} kg</div>
+                    <div class="${cardClass}">
+                        <div class="text-[11px] text-slate-500 font-medium">น้ำหนักบรรทุก (Pu)</div>
+                        <div class="text-base font-bold text-slate-800">${Pu} kg</div>
                     </div>
-                    <div class="bg-slate-50 p-3 rounded-lg border">
-                        <div class="text-[11px] text-slate-500">ขนาดหน้าตัด</div>
-                        <div class="text-lg font-bold text-slate-800">${dim} x ${dim} cm</div>
+                    <div class="${cardClass}">
+                        <div class="text-[11px] text-slate-500 font-medium">ขนาดหน้าตัด</div>
+                        <div class="text-base font-bold text-slate-800">${dim} x ${dim} cm</div>
                     </div>
                 `;
 
@@ -1179,8 +1208,8 @@
 
                 svgContent = `
                     <svg viewBox="0 0 400 200" class="w-full h-full">
-                        <rect x="0" y="0" width="400" height="200" fill="#1e293b"/>
-                        <rect x="140" y="40" width="120" height="120" fill="#64748b" stroke="#94a3b8" stroke-width="2"/>
+                        <rect x="0" y="0" width="400" height="200" fill="#090d16"/>
+                        <rect x="140" y="40" width="120" height="120" fill="#334155" stroke="#64748b" stroke-width="2"/>
                         <circle cx="155" cy="55" r="5" fill="#f59e0b"/>
                         <circle cx="245" cy="55" r="5" fill="#f59e0b"/>
                         <circle cx="155" cy="145" r="5" fill="#f59e0b"/>
@@ -1205,7 +1234,7 @@
                 document.getElementById('rpt-title').innerText = "2. รายการคำนวณองค์อาคาร ค.ส.ล. (RC Member Design)";
             }
 
-            document.getElementById('rc-status-badge').className = pass ? "px-3 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-700" : "px-3 py-1 rounded-full text-xs font-bold bg-red-100 text-red-700";
+            document.getElementById('rc-status-badge').className = pass ? "px-3.5 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-700 border border-emerald-200" : "px-3.5 py-1 rounded-full text-xs font-bold bg-red-100 text-red-700 border border-red-200";
             document.getElementById('rc-status-badge').innerText = pass ? "PASS / ผ่านเกณฑ์" : "FAIL / ไม่ผ่านเกณฑ์";
             document.getElementById('rc-result-summary').innerHTML = summaryHTML;
             document.getElementById('rc-calc-steps').innerHTML = stepsHTML;
