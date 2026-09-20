@@ -430,12 +430,12 @@
                         <button type="button" onclick="toggleHelp(event, '${targetId}-help')" class="tooltip-btn text-[10px] bg-slate-100 hover:bg-brand-500 hover:text-white text-slate-500 font-bold w-4 h-4 rounded-full border border-slate-300 flex items-center justify-center transition-colors">
                             ?
                         </button>
-                        <div id="${targetId}-help" class="tooltip-box hidden absolute right-0 bottom-6 w-56 p-2.5 bg-slate-800 text-white text-[11px] rounded-lg shadow-xl z-50 leading-relaxed font-normal">
-                            <div class="flex justify-between items-start mb-1 font-bold border-b border-slate-700 pb-1 text-brand-300">
-                                <span><i class="fa-solid fa-circle-info mr-1"></i> คำอธิบาย</span>
+                        <div id="${targetId}-help" class="tooltip-box hidden absolute right-0 bottom-6 w-64 p-3 bg-slate-800 text-white text-[11px] rounded-lg shadow-xl z-50 leading-relaxed font-normal">
+                            <div class="flex justify-between items-start mb-1.5 font-bold border-b border-slate-700 pb-1 text-brand-300">
+                                <span><i class="fa-solid fa-circle-info mr-1"></i> คำอธิบายวิศวกรรม</span>
                                 <button type="button" onclick="toggleHelp(event, '${targetId}-help')" class="text-slate-400 hover:text-white">&times;</button>
                             </div>
-                            <div>${helpText}</div>
+                            <div class="space-y-1">${helpText}</div>
                         </div>
                     </div>
                 </div>
@@ -504,7 +504,7 @@
                 html = `
                     <div class="grid grid-cols-2 gap-3">
                         <div>
-                            ${createLabelWithHelp('วัสดุมุงหลังคา (Roof Sheet)', 'เลือกประเภทวัสดุมุงหลังคาเพื่อคำนวณน้ำหนักคงที่ (Dead Load)', 'purlin-roof-weight')}
+                            ${createLabelWithHelp('วัสดุมุงหลังคา (Roof Sheet)', '<b>มาตรฐาน:</b> กฎกระทรวง ฉบับที่ 6 (พ.ศ.2527) / มอก.<br><b>ที่มาค่า:</b> สเปกผู้ผลิตแผ่นมุง เช่น เมทัลชีท 0.47mm (~6 kg/m²), ลอนคู่ (~15 kg/m²)<br><b>การนำไปใช้:</b> ใช้เป็นน้ำหนักบรรทุกคงที่ (Dead Load)', 'purlin-roof-weight')}
                             <select id="purlin-roof-weight" class="w-full text-xs p-2.5 border rounded-lg bg-slate-50" onchange="calculateSteel()">
                                 <option value="6">เมทัลชีท Metal Sheet (6 kg/m²)</option>
                                 <option value="15">กระเบื้องลอนคู่ (15 kg/m²)</option>
@@ -512,7 +512,7 @@
                             </select>
                         </div>
                         <div>
-                            ${createLabelWithHelp('หน้าตัดเหล็กแป (Purlin)', 'เลือกขนาดเหล็กตัวซี (C-Channel)', 'purlin-profile')}
+                            ${createLabelWithHelp('หน้าตัดเหล็กแป (Purlin)', '<b>มาตรฐาน:</b> มอก. 1228-2537 (เหล็กขึ้นรูปเย็น C-Channel)<br><b>ที่มาค่า:</b> ตารางคุณสมบัติเหล็กโครงสร้าง (Inertia Ix, Iy, Section Modulus Sx, Sy)<br><b>การคำนวณ:</b> ตรวจสอบความเค้นดัดสองแกน (Biaxial Bending)', 'purlin-profile')}
                             <select id="purlin-profile" class="w-full text-xs p-2.5 border rounded-lg bg-slate-50" onchange="calculateSteel()">
                                 ${Object.keys(STEEL_PROFILES).filter(k => k.startsWith('C')).map(k => `<option value="${k}">${STEEL_PROFILES[k].name}</option>`).join('')}
                             </select>
@@ -520,34 +520,34 @@
                     </div>
                     <div class="grid grid-cols-2 gap-3">
                         <div>
-                            ${createLabelWithHelp('ระยะห่างแป (Spacing S, m)', 'ระยะห่างระหว่างแถวแป (ม.)', 'purlin-spacing')}
+                            ${createLabelWithHelp('ระยะห่างแป (Spacing S, m)', '<b>มาตรฐาน:</b> ข้อกำหนดผู้ผลิตแผ่นมุงหลังคาเพื่อป้องกันแผ่นแอ่น<br><b>ที่มาค่า:</b> แบบสถาปัตยกรรม/ระยะการยึดแผ่นมุง (ทั่วไป 1.0 - 1.5 m)<br><b>การคำนวณ:</b> แปลงโหลดพื้นที่ (kg/m²) เป็นโหลดเส้น (kg/m)', 'purlin-spacing')}
                             <input type="number" id="purlin-spacing" value="1.0" step="0.1" class="w-full text-xs p-2.5 border rounded-lg bg-slate-50" oninput="calculateSteel()">
                         </div>
                         <div>
-                            ${createLabelWithHelp('ช่วงจันทัน (Span L, m)', 'ระยะพาดของแประหว่างจุดรองรับ (ม.)', 'purlin-span')}
+                            ${createLabelWithHelp('ช่วงจันทัน (Span L, m)', '<b>มาตรฐาน:</b> ระยะพาดตามทฤษฎี Simple Beam / AISC ASD<br><b>ที่มาค่า:</b> ระยะห่างระหว่างโครงจันทัน หรือระยะช่องทรัสจากแบบวิศวกรรม<br><b>การคำนวณ:</b> ใช้คำนวณโมเมนต์สูงสุด M = wL²/8 และ Deflection', 'purlin-span')}
                             <input type="number" id="purlin-span" value="4.0" step="0.5" class="w-full text-xs p-2.5 border rounded-lg bg-slate-50" oninput="calculateSteel()">
                         </div>
                     </div>
                     <div class="grid grid-cols-2 gap-3">
                         <div>
-                            ${createLabelWithHelp('ความชันหลังคา (Pitch, °)', 'มุมเอียงทำกับแนวระดับ (องศา)', 'purlin-angle')}
+                            ${createLabelWithHelp('ความชันหลังคา (Pitch, °)', '<b>มาตรฐาน:</b> หลักตรีโกณมิติทางวิศวกรรมโครงสร้าง<br><b>ที่มาค่า:</b> ความลาดเอียงหลังคาจากแบบสถาปัตยกรรม<br><b>การคำนวณ:</b> แตกแรงลงแกน X (Wx = DL sin θ) และแกน Y (Wy = DL cos θ)', 'purlin-angle')}
                             <input type="number" id="purlin-angle" value="15" step="1" class="w-full text-xs p-2.5 border rounded-lg bg-slate-50" oninput="calculateSteel()">
                         </div>
                         <div>
-                            ${createLabelWithHelp('แรงลม (Wind Load, kg/m²)', 'แรงลมปะทะหลังคา (kg/m²)', 'purlin-wind')}
+                            ${createLabelWithHelp('แรงลม (Wind Load, kg/m²)', '<b>มาตรฐาน:</b> มยผ. 1311-50 / กฎกระทรวง ฉบับที่ 6<br><b>ที่มาค่า:</b> ความสูงอาคารและพื้นที่ภูมิประเทศ (อาคารต่ำกว่า 10m ใช้ 50 kg/m²)<br><b>การคำนวณ:</b> รวมกระทำตั้งฉากผืนหลังคาในแกน Y', 'purlin-wind')}
                             <input type="number" id="purlin-wind" value="50" step="5" class="w-full text-xs p-2.5 border rounded-lg bg-slate-50" oninput="calculateSteel()">
                         </div>
                     </div>
                     <div class="grid grid-cols-2 gap-3">
                         <div>
-                            ${createLabelWithHelp('กำลังเหล็ก Fy (kg/cm²)', 'ค่ายีลด์ SS400 = 2,450 kg/cm²', 'purlin-fy')}
+                            ${createLabelWithHelp('กำลังเหล็ก Fy (kg/cm²)', '<b>มาตรฐาน:</b> มอก. 1228 / TIS / JIS G3101<br><b>ที่มาค่า:</b> ค่ากำลังครากขั้นต่ำของเหล็ก เช่น SS400 (Fy = 2,450 kg/cm²)<br><b>การคำนวณ:</b> กำหนดความเค้นดัดยอมให้ Fb = 0.60 x Fy (AISC ASD)', 'purlin-fy')}
                             <select id="purlin-fy" class="w-full text-xs p-2.5 border rounded-lg bg-slate-50" onchange="calculateSteel()">
                                 <option value="2450">SS400 (Fy = 2,450 kg/cm²)</option>
                                 <option value="3200">SM400 (Fy = 3,200 kg/cm²)</option>
                             </select>
                         </div>
                         <div>
-                            ${createLabelWithHelp('การค้ำยัน Sag Rod', 'การใส่เหล็กรั้งลดการดัดแกนอ่อน', 'purlin-sagrod')}
+                            ${createLabelWithHelp('การค้ำยัน Sag Rod', '<b>มาตรฐาน:</b> AISC Manual of Steel Construction<br><b>ที่มาค่า:</b> การติดตั้งเหล็กดึงยึดระหว่างแปแปเหล็ก<br><b>ผลคำนวณ:</b> หากใส่ 1 จุด จะช่วยลดช่วงพาดดัดแกนอ่อนเหลือ L/2 ทำให้ My ลดลงมาก', 'purlin-sagrod')}
                             <select id="purlin-sagrod" class="w-full text-xs p-2.5 border rounded-lg bg-slate-50" onchange="calculateSteel()">
                                 <option value="1">ใส่ Sag Rod 1 จุด (กึ่งกลาง)</option>
                                 <option value="0">ไม่ใส่ Sag Rod</option>
@@ -558,7 +558,7 @@
             } else if (currentSteelSub === 'rafter') {
                 html = `
                     <div>
-                        ${createLabelWithHelp('ทรงหลังคา (Roof Geometry)', 'รูปแบบหลังคาเพื่อแจกแจงแรง', 'rafter-roof-type')}
+                        ${createLabelWithHelp('ทรงหลังคา (Roof Geometry)', '<b>มาตรฐาน:</b> หลักกลศาสตร์วิศวกรรม (Engineering Mechanics)<br><b>ที่มาค่า:</b> รูปทรงหลังคาจากแบบสถาปัตยกรรม (จั่ว/หมาแหงน)<br><b>ผลคำนวณ:</b> ใช้กำหนดรูปแบบการกระจายแรงและแตกแรงลงองค์อาคาร', 'rafter-roof-type')}
                         <select id="rafter-roof-type" class="w-full text-xs p-2.5 border rounded-lg bg-slate-50" onchange="calculateSteel()">
                             <option value="gable">หลังคาทรงจั่ว (Gable Roof)</option>
                             <option value="lean">หลังคาทรงหมาแหงน (Lean-to Roof)</option>
@@ -566,27 +566,27 @@
                     </div>
                     <div class="grid grid-cols-2 gap-3">
                         <div>
-                            ${createLabelWithHelp('ช่วงยาวจันทัน (Span L, m)', 'ความยาวพาดคาน/จันทัน (ม.)', 'rafter-span')}
+                            ${createLabelWithHelp('ช่วงยาวจันทัน (Span L, m)', '<b>มาตรฐาน:</b> ทฤษฎีวิเคราะห์โครงสร้าง Beam Analysis<br><b>ที่มาค่า:</b> ระยะห่างระหว่างเสารับจันทันหรือคานรับโครงสร้าง<br><b>ผลคำนวณ:</b> คำนวณ M_max = wL²/8 และตรวจสอบการแอ่นตัว', 'rafter-span')}
                             <input type="number" id="rafter-span" value="6.0" step="0.5" class="w-full text-xs p-2.5 border rounded-lg bg-slate-50" oninput="calculateSteel()">
                         </div>
                         <div>
-                            ${createLabelWithHelp('ระยะห่างโครง (Spacing, m)', 'ระยะห่างระหว่างชุดจันทัน (ม.)', 'rafter-spacing')}
+                            ${createLabelWithHelp('ระยะห่างโครง (Spacing, m)', '<b>มาตรฐาน:</b> แบบวางผังโครงหลังคา (Roof Framing Plan)<br><b>ที่มาค่า:</b> ระยะห่างระหว่างตัวจันทันหรือชุดโครงทรัส<br><b>ผลคำนวณ:</b> คำนวณ Trib. Area เพื่อแปลงโหลดกระจายพื้นที่เป็นยูนิฟอร์มโหลด', 'rafter-spacing')}
                             <input type="number" id="rafter-spacing" value="4.0" step="0.5" class="w-full text-xs p-2.5 border rounded-lg bg-slate-50" oninput="calculateSteel()">
                         </div>
                     </div>
                     <div>
-                        ${createLabelWithHelp('หน้าตัดเหล็กจันทัน (Profile)', 'เลือกขนาด Wide Flange / RHS / C', 'rafter-profile')}
+                        ${createLabelWithHelp('หน้าตัดเหล็กจันทัน (Profile)', '<b>มาตรฐาน:</b> มอก. 1227-2558 (เหล็กโครงสร้างรูปพรรณรีดร้อน/ขึ้นรูป)<br><b>ที่มาค่า:</b> ขนาดเหล็ก Wide Flange, RHS, C-Channel ตามท้องตลาด<br><b>ผลคำนวณ:</b> ดึงค่า Sx, Ix และน้ำหนักตัวเองมาร่วมคำนวณ', 'rafter-profile')}
                         <select id="rafter-profile" class="w-full text-xs p-2.5 border rounded-lg bg-slate-50" onchange="calculateSteel()">
                             ${Object.keys(STEEL_PROFILES).filter(k => k.startsWith('WF') || k.startsWith('RHS') || k.startsWith('C')).map(k => `<option value="${k}">${STEEL_PROFILES[k].name}</option>`).join('')}
                         </select>
                     </div>
                     <div class="grid grid-cols-2 gap-3">
                         <div>
-                            ${createLabelWithHelp('น้ำหนักจร (Live Load, kg/m²)', 'น้ำหนักบรรทุกจรหลังคา', 'rafter-ll')}
+                            ${createLabelWithHelp('น้ำหนักจร (Live Load, kg/m²)', '<b>มาตรฐาน:</b> กฎกระทรวง ฉบับที่ 6 / ข้อกำหนด ว.ส.ท.<br><b>ที่มาค่า:</b> น้ำหนักคนขึ้นซ่อมแซมหลังคา (หลังคาเอียงเกิน 15° ใช้ 30 kg/m²)<br><b>ผลคำนวณ:</b> นำไปรวมกับ Dead Load คิดความเค้นดัด', 'rafter-ll')}
                             <input type="number" id="rafter-ll" value="30" step="5" class="w-full text-xs p-2.5 border rounded-lg bg-slate-50" oninput="calculateSteel()">
                         </div>
                         <div>
-                            ${createLabelWithHelp('น้ำหนักคงที่ (Dead Load, kg/m²)', 'น้ำหนักหลังคา + แป + ฝ้า', 'rafter-dl')}
+                            ${createLabelWithHelp('น้ำหนักคงที่ (Dead Load, kg/m²)', '<b>มาตรฐาน:</b> ว.ส.ท. / มยผ.<br><b>ที่มาค่า:</b> น้ำหนักวัสดุมุง + น้ำหนักแปเหล็ก + งานฝ้าเพดานแขวน<br><b>ผลคำนวณ:</b> รวมเป็นน้ำหนักบรรทุกคงที่ลงจันทัน', 'rafter-dl')}
                             <input type="number" id="rafter-dl" value="25" step="5" class="w-full text-xs p-2.5 border rounded-lg bg-slate-50" oninput="calculateSteel()">
                         </div>
                     </div>
@@ -595,7 +595,7 @@
                 html = `
                     <div class="grid grid-cols-2 gap-3">
                         <div>
-                            ${createLabelWithHelp('รูปทรงทรัส (Truss Type)', 'รูปแบบการถักโครงสร้าง', 'truss-type')}
+                            ${createLabelWithHelp('รูปทรงทรัส (Truss Type)', '<b>มาตรฐาน:</b> การวิเคราะห์โครงหมุน Pin-Connected Truss<br><b>ที่มาค่า:</b> เลือกรูปแบบการจัดวางชิ้นส่วนถัก (Pratt, Howe, Warren, Fink)<br><b>ผลคำนวณ:</b> กำหนดรูปแบบการกระจายแรงดึง/แรงอัดในชิ้นส่วน', 'truss-type')}
                             <select id="truss-type" class="w-full text-xs p-2.5 border rounded-lg bg-slate-50" onchange="calculateSteel()">
                                 <option value="pratt">Pratt Truss (พรัตต์)</option>
                                 <option value="howe">Howe Truss (ฮาว)</option>
@@ -604,36 +604,36 @@
                             </select>
                         </div>
                         <div>
-                            ${createLabelWithHelp('ช่วงกว้างทรัส (Span L, m)', 'ความยาวพาดรวม (ม.)', 'truss-span')}
+                            ${createLabelWithHelp('ช่วงกว้างทรัส (Span L, m)', '<b>มาตรฐาน:</b> ทฤษฎีวิเคราะห์โครงถัก (Truss Analysis)<br><b>ที่มาค่า:</b> ระยะพาดจากศูนย์กลางเสาถึงศูนย์กลางเสาอีกฝั่ง<br><b>ผลคำนวณ:</b> หาแรงภายในชิ้นส่วน Top/Bottom Chord และ Web Members', 'truss-span')}
                             <input type="number" id="truss-span" value="12.0" step="1.0" class="w-full text-xs p-2.5 border rounded-lg bg-slate-50" oninput="calculateSteel()">
                         </div>
                     </div>
                     <div class="grid grid-cols-2 gap-3">
                         <div>
-                            ${createLabelWithHelp('ความสูงทรัส (Height H, m)', 'ความสูงตรงกลางโครง (ม.)', 'truss-height')}
+                            ${createLabelWithHelp('ความสูงทรัส (Height H, m)', '<b>มาตรฐาน:</b> อัตราส่วนความสูงต่อช่วงพาดแนะนำ (H/L ≈ 1/10 ถึง 1/6)<br><b>ที่มาค่า:</b> สถาปัตยกรรมและมุมความชันหลังคา<br><b>ผลคำนวณ:</b> ยิ่งสูง แรงอัดใน Top Chord ยิ่งลดลง', 'truss-height')}
                             <input type="number" id="truss-height" value="1.8" step="0.1" class="w-full text-xs p-2.5 border rounded-lg bg-slate-50" oninput="calculateSteel()">
                         </div>
                         <div>
-                            ${createLabelWithHelp('จำนวนช่อง (Panels N)', 'จำนวนช่วงถักแนวนอน', 'truss-panels')}
+                            ${createLabelWithHelp('จำนวนช่อง (Panels N)', '<b>มาตรฐาน:</b> การซอยช่วงจุดต่อเพื่อรับแป (Joint Loading)<br><b>ที่มาค่า:</b> จำนวนช่วงแบ่งแนวนอนตามตำแหน่งวางแปเหล็ก<br><b>ผลคำนวณ:</b> คำนวณระยะพาดระหว่างจุดต่อของชิ้นส่วน', 'truss-panels')}
                             <input type="number" id="truss-panels" value="6" min="4" max="12" class="w-full text-xs p-2.5 border rounded-lg bg-slate-50" oninput="calculateSteel()">
                         </div>
                     </div>
                     <div class="grid grid-cols-2 gap-3">
                         <div>
-                            ${createLabelWithHelp('เหล็กโครงบน/ล่าง (Chord)', 'ขนาดเหล็ก Top/Bottom Chord', 'truss-chord-profile')}
+                            ${createLabelWithHelp('เหล็กโครงบน/ล่าง (Chord)', '<b>มาตรฐาน:</b> มอก. 107-2533 / มอก. 1227<br><b>ที่มาค่า:</b> เหล็กกล่องเหลี่ยม SHS หรือ ท่อเหล็ก/ฉากคู่<br><b>ผลคำนวณ:</b> เช็กกำลังรับแรงอัดยอมให้ Fa = 0.55Fy (AISC ASD)', 'truss-chord-profile')}
                             <select id="truss-chord-profile" class="w-full text-xs p-2.5 border rounded-lg bg-slate-50" onchange="calculateSteel()">
                                 ${Object.keys(STEEL_PROFILES).filter(k => k.startsWith('SHS') || k.startsWith('L') || k.startsWith('RHS')).map(k => `<option value="${k}">${STEEL_PROFILES[k].name}</option>`).join('')}
                             </select>
                         </div>
                         <div>
-                            ${createLabelWithHelp('เหล็กแนวถัก (Web)', 'ขนาดเหล็กแนวตั้ง/แนวเฉียง', 'truss-web-profile')}
+                            ${createLabelWithHelp('เหล็กแนวถัก (Web)', '<b>มาตรฐาน:</b> มอก. 107-2533 / มอก. 1227<br><b>ที่มาค่า:</b> ขนาดเหล็กแนวตั้งและแนวเฉียงภายในโครงถัก<br><b>ผลคำนวณ:</b> ตรวจสอบกำลังรับแรงดึงและแรงอัดทางเฉียง', 'truss-web-profile')}
                             <select id="truss-web-profile" class="w-full text-xs p-2.5 border rounded-lg bg-slate-50" onchange="calculateSteel()">
                                 ${Object.keys(STEEL_PROFILES).filter(k => k.startsWith('L') || k.startsWith('SHS') || k.startsWith('PIPE')).map(k => `<option value="${k}">${STEEL_PROFILES[k].name}</option>`).join('')}
                             </select>
                         </div>
                     </div>
                     <div>
-                        ${createLabelWithHelp('แรงลงจุดต่อ (Nodal P, kg)', 'แรงถ่ายลงจุดต่อข้อหมุน (kg)', 'truss-load')}
+                        ${createLabelWithHelp('แรงลงจุดต่อ (Nodal P, kg)', '<b>มาตรฐาน:</b> การแปลงกระจายโหลดลง Node (Point Load Calculation)<br><b>ที่มาค่า:</b> คำนวณจาก (Dead Load + Live Load) x ระยะห่างทรัส x ระยะห่างแป<br><b>ผลคำนวณ:</b> ป้อนแรงเข้าจุดต่อข้อหมุนเพื่อหาแรงในชิ้นส่วน', 'truss-load')}
                         <input type="number" id="truss-load" value="450" step="50" class="w-full text-xs p-2.5 border rounded-lg bg-slate-50" oninput="calculateSteel()">
                     </div>
                 `;
@@ -641,24 +641,24 @@
                 html = `
                     <div class="grid grid-cols-2 gap-3">
                         <div>
-                            ${createLabelWithHelp('ประเภทจุดต่อ (Connection)', 'เลือกประเภทการยึดต่อ', 'conn-type')}
+                            ${createLabelWithHelp('ประเภทจุดต่อ (Connection)', '<b>มาตรฐาน:</b> AISC Specification for Structural Steel Buildings<br><b>ที่มาค่า:</b> รูปแบบการยึดต่อในแบบรายละเอียด (รอยเชื่อมฟิลเล็ท หรือ น็อตเอว)<br><b>ผลคำนวณ:</b> เลือกสมการคำนวณกำลังรับแรงเฉือนและแรงดึง', 'conn-type')}
                             <select id="conn-type" class="w-full text-xs p-2.5 border rounded-lg bg-slate-50" onchange="calculateSteel()">
                                 <option value="weld">รอยเชื่อม Fillet Weld</option>
                                 <option value="bolt">จุดต่อสลักเกลียว (Bolt)</option>
                             </select>
                         </div>
                         <div>
-                            ${createLabelWithHelp('แรงออกแบบ (Pu, kg)', 'แรงดึง/อัดแกนที่จุดต่อ (kg)', 'conn-force')}
+                            ${createLabelWithHelp('แรงออกแบบ (Pu, kg)', '<b>มาตรฐาน:</b> ผลการวิเคราะห์แรงจากโครงสร้าง (Truss/Frame Analysis)<br><b>ที่มาค่า:</b> แรงดึงหรือแรงอัดสูงสุด ณ ปลายชิ้นส่วน<br><b>ผลคำนวณ:</b> ใช้เปรียบเทียบกับกำลังรับแรงสูงสุดของจุดต่อ', 'conn-force')}
                             <input type="number" id="conn-force" value="5500" step="500" class="w-full text-xs p-2.5 border rounded-lg bg-slate-50" oninput="calculateSteel()">
                         </div>
                     </div>
                     <div class="grid grid-cols-2 gap-3">
                         <div>
-                            ${createLabelWithHelp('ขนาดรอยเชื่อม (Weld, mm)', 'ขนาดขาเชื่อม Fillet Leg (mm)', 'conn-weld-size')}
+                            ${createLabelWithHelp('ขนาดรอยเชื่อม (Weld, mm)', '<b>มาตรฐาน:</b> AWS D1.1 Structural Welding Code<br><b>ที่มาค่า:</b> ความหนาขาเชื่อม Fillet Weld Leg Size (mm)<br><b>ผลคำนวณ:</b> คิดคอเชื่อมประสิทธิผล t_eff = 0.707 x Leg และความเค้น Fw = 0.30 x E70', 'conn-weld-size')}
                             <input type="number" id="conn-weld-size" value="6" step="1" class="w-full text-xs p-2.5 border rounded-lg bg-slate-50" oninput="calculateSteel()">
                         </div>
                         <div>
-                            ${createLabelWithHelp('ขนาดน็อต (Bolt Size)', 'ขนาดเส้นผ่านศูนย์กลางน็อต', 'conn-bolt-dia')}
+                            ${createLabelWithHelp('ขนาดน็อต (Bolt Size)', '<b>มาตรฐาน:</b> ASTM A325 / ISO 898-1 (High Strength Bolt)<br><b>ที่มาค่า:</b> ขนาดเส้นผ่านศูนย์กลางสลักเกลียวยึดจุดต่อ (M12, M16, M20)<br><b>ผลคำนวณ:</b> คิดพื้นที่รับแรงเฉือน A_b และความเค้นเฉือนยอมให้ Fnv', 'conn-bolt-dia')}
                             <select id="conn-bolt-dia" class="w-full text-xs p-2.5 border rounded-lg bg-slate-50" onchange="calculateSteel()">
                                 <option value="12">M12 (Ø 12 mm)</option>
                                 <option value="16" selected>M16 (Ø 16 mm)</option>
@@ -679,31 +679,31 @@
                 html = `
                     <div class="grid grid-cols-2 gap-3">
                         <div>
-                            ${createLabelWithHelp('ความกว้างคาน b (cm)', 'ความกว้างหน้าตัด (ซม.)', 'rc-b')}
+                            ${createLabelWithHelp('ความกว้างคาน b (cm)', '<b>มาตรฐาน:</b> ข้อกำหนดมิติหน้าตัด ACI 318 / ว.ส.ท.<br><b>ที่มาค่า:</b> ขนาดความกว้างคานตามแบบสถาปัตยกรรม (ทั่วไป 15-30 cm)<br><b>ผลคำนวณ:</b> ใช้คำนวณกำลังรับแรงดัด Rn = Mu/(φ b d²) และแรงเฉือน', 'rc-b')}
                             <input type="number" id="rc-b" value="20" class="w-full text-xs p-2.5 border rounded-lg bg-slate-50" oninput="calculateRC()">
                         </div>
                         <div>
-                            ${createLabelWithHelp('ความลึกคาน h (cm)', 'ความลึกหน้าตัดรวม (ซม.)', 'rc-h')}
+                            ${createLabelWithHelp('ความลึกคาน h (cm)', '<b>มาตรฐาน:</b> เกณฑ์ความลึกขั้นต่ำกันการแอ่นตัว L/16 (ACI 318 Table 9.3.1.1)<br><b>ที่มาค่า:</b> แบบสถาปัตยกรรม/โครงสร้าง<br><b>ผลคำนวณ:</b> ลบระยะระยะคอนกรีตหุ้ม (Covering) ได้ความลึกประสิทธิผล d', 'rc-h')}
                             <input type="number" id="rc-h" value="40" class="w-full text-xs p-2.5 border rounded-lg bg-slate-50" oninput="calculateRC()">
                         </div>
                     </div>
                     <div class="grid grid-cols-2 gap-3">
                         <div>
-                            ${createLabelWithHelp('โมเมนต์ Mu (kg.m)', 'Factored Bending Moment (kg.m)', 'rc-mu')}
+                            ${createLabelWithHelp('โมเมนต์ Mu (kg.m)', '<b>มาตรฐาน:</b> การรวมน้ำหนักเพิ่มพูนตาม SDM (U = 1.4DL + 1.7LL)<br><b>ที่มาค่า:</b> ผลวิเคราะห์โครงสร้างคาน (Beam Structural Analysis)<br><b>ผลคำนวณ:</b> ป้อนหาพื้นที่เหล็กเสริมรับแรงดึง As', 'rc-mu')}
                             <input type="number" id="rc-mu" value="4500" class="w-full text-xs p-2.5 border rounded-lg bg-slate-50" oninput="calculateRC()">
                         </div>
                         <div>
-                            ${createLabelWithHelp('แรงเฉือน Vu (kg)', 'Factored Shear Force (kg)', 'rc-vu')}
+                            ${createLabelWithHelp('แรงเฉือน Vu (kg)', '<b>มาตรฐาน:</b> การวิเคราะห์แรงเฉือนเพิ่มพูน (Factored Shear Force)<br><b>ที่มาค่า:</b> ผลวิเคราะห์แรงเฉือนที่ขอบจุดรองรับคาน<br><b>ผลคำนวณ:</b> ใช้คำนวณออกแบบเหล็กปลอกคาน (Stirrups)', 'rc-vu')}
                             <input type="number" id="rc-vu" value="3200" class="w-full text-xs p-2.5 border rounded-lg bg-slate-50" oninput="calculateRC()">
                         </div>
                     </div>
                     <div class="grid grid-cols-2 gap-3">
                         <div>
-                            ${createLabelWithHelp("fc' คอนกรีต (kg/cm²)", 'กำลังอัดประดัยน์ Cylinder (kg/cm²)', 'rc-fc')}
+                            ${createLabelWithHelp("fc' คอนกรีต (kg/cm²)", '<b>มาตรฐาน:</b> ASTM C39 (Cylinder) / มอก. 213-2552<br><b>ที่มาค่า:</b> ค่ากำลังอัดประดัยน์ของคอนกรีตที่อายุ 28 วัน จากแพล้นท์คอนกรีตสด<br><b>ผลคำนวณ:</b> ใช้หาหน่วยแรงอัดในบล็อกความเค้น (Whitney Stress Block 0.85fc\')', 'rc-fc')}
                             <input type="number" id="rc-fc" value="240" class="w-full text-xs p-2.5 border rounded-lg bg-slate-50" oninput="calculateRC()">
                         </div>
                         <div>
-                            ${createLabelWithHelp('Fy เหล็กเสริม (kg/cm²)', 'กำลังครากเหล็กข้ออ้อย', 'rc-fy')}
+                            ${createLabelWithHelp('Fy เหล็กเสริม (kg/cm²)', '<b>มาตรฐาน:</b> มอก. 24-2559 (เหล็กข้ออ้อย SD30 / SD40 / SD50)<br><b>ที่มาค่า:</b> ผลทดสอบแรงดึงเหล็ก หรือมาตรฐานชนิดเหล็กที่เลือกใช้<br><b>ผลคำนวณ:</b> ใช้คำนวณอัตราส่วนเหล็กเสริมสูงสุด/ขั้นต่ำ (ρ_max, ρ_min)', 'rc-fy')}
                             <select id="rc-fy" class="w-full text-xs p-2.5 border rounded-lg bg-slate-50" onchange="calculateRC()">
                                 <option value="3000">SD30 (Fy = 3,000 kg/cm²)</option>
                                 <option value="4000" selected>SD40 (Fy = 4,000 kg/cm²)</option>
@@ -718,11 +718,11 @@
                     </div>
                     <div class="grid grid-cols-2 gap-3">
                         <div>
-                            ${createLabelWithHelp('น้ำหนักบรรทุก Pu (kg)', 'แรงประดัยน์ลงองค์อาคาร (kg)', 'rc-pu')}
+                            ${createLabelWithHelp('น้ำหนักบรรทุก Pu (kg)', '<b>มาตรฐาน:</b> สมการรวมน้ำหนักเพิ่มพูน SDM (U = 1.4DL + 1.7LL)<br><b>ที่มาค่า:</b> ผลวิเคราะห์แรงถ่ายลงเสา/ฐานราก (Column Axial Load Analysis)<br><b>ผลคำนวณ:</b> เช็กกำลังรับแรงอัดตามแกนและออกแบบเหล็กเสริม', 'rc-pu')}
                             <input type="number" id="rc-pu" value="18000" class="w-full text-xs p-2.5 border rounded-lg bg-slate-50" oninput="calculateRC()">
                         </div>
                         <div>
-                            ${createLabelWithHelp('ขนาดหน้าตัด (cm)', 'ขนาดกว้าง/ยาวหน้าตัด (ซม.)', 'rc-dim')}
+                            ${createLabelWithHelp('ขนาดหน้าตัด (cm)', '<b>มาตรฐาน:</b> ข้อกำหนดขนาดเสา/ฐานรากขั้นต่ำตามมาตรฐาน ว.ส.ท.<br><b>ที่มาค่า:</b> แบบรายละเอียดโครงสร้างสถาปัตยกรรม<br><b>ผลคำนวณ:</b> ใช้หาพื้นที่หน้าตัดคอนกรีต Gross Area (Ag)', 'rc-dim')}
                             <input type="number" id="rc-dim" value="25" class="w-full text-xs p-2.5 border rounded-lg bg-slate-50" oninput="calculateRC()">
                         </div>
                     </div>
@@ -1140,58 +1140,69 @@
                         <div>• <strong>กำลังอัดคอนกรีต (fc'):</strong> ${fc} kg/cm² (Cylinder)</div>
                         <div>• <strong>กำลังครากเหล็ก (Fy):</strong> ${fy} kg/cm²</div>
                         <div>• <strong>โมเมนต์ประดัยน์ (Mu):</strong> ${(Mu/100).toFixed(0)} kg.m</div>
-                        <div>• <strong>แรงเฉือนประดัยน์ (Vu):</strong> ${Vu} kg</div>
                     </div>
                 `;
 
                 rptCalcDetails = `
                     <div class="space-y-1.5">
-                        <p class="font-bold text-slate-900">[ขั้นที่ 1] คำนวณความลึกประสิทธิผลและการรับแรงดัด (Strength Design Method - SDM)</p>
-                        <p class="pl-3"> d = h - Cover = ${h} - 4.0 = <strong>${d} cm</strong></p>
+                        <p class="font-bold text-slate-900">[ขั้นที่ 1] คำนวณตามวิธีวิเคราะห์กำลัง (Strength Design Method - SDM ACI 318)</p>
+                        <p class="pl-3"> d = h - Covering = ${h} - 4.0 = <strong>${d.toFixed(1)} cm</strong></p>
                         <p class="pl-3"> Rn = Mu / (&phi; &middot; b &middot; d²) = ${Mu} / (0.90 &times; ${b} &times; ${d}²) = <strong>${Rn.toFixed(2)} kg/cm²</strong></p>
-                        
-                        <p class="font-bold text-slate-900 mt-2">[ขั้นที่ 2] คำนวณอัตราส่วนเหล็กเสริม (&rho;)</p>
-                        <p class="pl-3"> &rho; = (0.85&middot;fc'/Fy) &times; [ 1 - &radic;(1 - (2&middot;Rn)/(0.85&middot;fc')) ] = <strong>${rho.toFixed(5)}</strong></p>
-                        <p class="pl-3"> &rho;_max = 0.75 &times; &rho;_b = 0.75 &times; (0.85&middot;&beta;1&middot;fc'/Fy)&middot;(6120/(6120+Fy)) = <strong>${rhoMax.toFixed(5)}</strong></p>
+                        <p class="font-bold text-slate-900 mt-2">[ขั้นที่ 2] คำนวณปริมาณเหล็กเสริมรับแรงดึง (Reinforcement Ratio)</p>
+                        <p class="pl-3"> &rho; = (0.85 &middot; fc' / Fy) &middot; [1 - &radic;(1 - 2Rn / (0.85fc'))] = <strong>${rho.toFixed(5)}</strong></p>
                         <p class="pl-3"> &rho;_min = 14 / Fy = 14 / ${fy} = <strong>${rhoMin.toFixed(5)}</strong></p>
-                        <p class="pl-3"> สรุปค่า &rho;_design = <strong>${finalRho.toFixed(5)}</strong> (&rho;_min &le; &rho;_design &le; &rho;_max)</p>
-
-                        <p class="font-bold text-slate-900 mt-2">[ขั้นที่ 3] คำนวณเนื้อที่เหล็กเสริมต้องใส่ (Required Steel Area)</p>
-                        <p class="pl-3"> As = &rho;_design &times; b &times; d = ${finalRho.toFixed(5)} &times; ${b} &times; ${d} = <strong>${As.toFixed(2)} cm²</strong></p>
-                        <p class="pl-3"> เลือกใช้เหล็กรับแรงดึง: <strong>2 - DB16 mm</strong> (As_provided = ${(2*2.01).toFixed(2)} cm²) (${As <= (2*2.01) ? '<span class="text-emerald-700 font-bold">ผ่านเกณฑ์</span>' : '<span class="text-red-600 font-bold">ต้องเพิ่มขนาดเหล็ก</span>'})</p>
+                        <p class="pl-3"> &rho;_max = 0.75 &middot; &rho;_b = <strong>${rhoMax.toFixed(5)}</strong></p>
+                        <p class="pl-3"> As = &rho; &middot; b &middot; d = <strong>${As.toFixed(2)} cm²</strong> (${rho <= rhoMax ? '<span class="text-emerald-700 font-bold">เหล็กเสริมรับแรงดึงอย่างเดียว ผ่านเกณฑ์</span>' : '<span class="text-red-600 font-bold">ต้องใส่เหล็กรับแรงอัดเพิ่ม</span>'})</p>
                     </div>
                 `;
-
                 document.getElementById('rpt-title').innerText = "1. รายการคำนวณคานคอนกรีตเสริมเหล็ก (RC Beam SDM Calculation)";
             } else {
-                const pu = parseFloat(document.getElementById('rc-pu').value) || 18000;
+                const Pu = parseFloat(document.getElementById('rc-pu').value) || 18000;
                 const dim = parseFloat(document.getElementById('rc-dim').value) || 25;
 
                 summaryHTML = `
                     <div class="bg-slate-50 p-3 rounded-lg border">
-                        <div class="text-[11px] text-slate-500">น้ำหนักบรรทุก Pu</div>
-                        <div class="text-lg font-bold text-slate-800">${pu} kg</div>
+                        <div class="text-[11px] text-slate-500">น้ำหนักบรรทุก (Pu)</div>
+                        <div class="text-lg font-bold text-slate-800">${Pu} kg</div>
                     </div>
                     <div class="bg-slate-50 p-3 rounded-lg border">
                         <div class="text-[11px] text-slate-500">ขนาดหน้าตัด</div>
                         <div class="text-lg font-bold text-slate-800">${dim} x ${dim} cm</div>
                     </div>
-                    <div class="bg-slate-50 p-3 rounded-lg border">
-                        <div class="text-[11px] text-slate-500">กำลังรับน้ำหนักปลอดภัย</div>
-                        <div class="text-lg font-bold text-emerald-600">PASS</div>
-                    </div>
                 `;
-                stepsHTML = `<p>1. ตรวจสอบกำลังรับแรงตามเกณฑ์ SDM ACI-318 เรียบร้อย</p>`;
+
+                stepsHTML = `
+                    <p>1. การออกแบบองค์อาคาร ค.ส.ล. ตามมาตรฐาน ACI 318 SDM</p>
+                    <p>2. Factored Load Pu = ${Pu} kg</p>
+                    <p>3. พื้นที่หน้าตัด Ag = ${dim*dim} cm²</p>
+                `;
+
                 svgContent = `
                     <svg viewBox="0 0 400 200" class="w-full h-full">
                         <rect x="0" y="0" width="400" height="200" fill="#1e293b"/>
-                        <rect x="150" y="40" width="100" height="120" fill="#64748b" stroke="#94a3b8" stroke-width="2"/>
-                        <text x="200" y="105" fill="#f8fafc" font-size="12" text-anchor="middle">RC Cross Section (${dim}x${dim} cm)</text>
+                        <rect x="140" y="40" width="120" height="120" fill="#64748b" stroke="#94a3b8" stroke-width="2"/>
+                        <circle cx="155" cy="55" r="5" fill="#f59e0b"/>
+                        <circle cx="245" cy="55" r="5" fill="#f59e0b"/>
+                        <circle cx="155" cy="145" r="5" fill="#f59e0b"/>
+                        <circle cx="245" cy="145" r="5" fill="#f59e0b"/>
+                        <text x="200" y="25" fill="#f8fafc" font-size="11" font-weight="bold" text-anchor="middle">รูปตัด ค.ส.ล. ${dim}x${dim} cm</text>
                     </svg>
                 `;
-                rptMaterial = `<div>• <strong>มาตรฐานการออกแบบ:</strong> SDM / ACI 318</div><div>• <strong>ขนาดหน้าตัด:</strong> ${dim} x ${dim} cm</div>`;
-                rptCalcDetails = `<p>1. องค์อาคารมีความแข็งแรงเพียงพอตามเกณฑ์มาตรฐาน SDM</p>`;
-                document.getElementById('rpt-title').innerText = `รายการคำนวณองค์อาคาร ค.ส.ล. (${currentRCSub.toUpperCase()})`;
+
+                rptMaterial = `
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>• <strong>ขนาดองค์อาคาร:</strong> ${dim} x ${dim} cm</div>
+                        <div>• <strong>น้ำหนักบรรทุก (Pu):</strong> ${Pu} kg</div>
+                    </div>
+                `;
+
+                rptCalcDetails = `
+                    <div class="space-y-1.5">
+                        <p class="font-bold text-slate-900">[ขั้นที่ 1] ตรวจสอบกำลังตามวิธี SDM ACI-318</p>
+                        <p class="pl-3"> Pu = <strong>${Pu} kg</strong> | Ag = <strong>${dim*dim} cm²</strong></p>
+                    </div>
+                `;
+                document.getElementById('rpt-title').innerText = "2. รายการคำนวณองค์อาคาร ค.ส.ล. (RC Member Design)";
             }
 
             document.getElementById('rc-status-badge').className = pass ? "px-3 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-700" : "px-3 py-1 rounded-full text-xs font-bold bg-red-100 text-red-700";
@@ -1199,12 +1210,6 @@
             document.getElementById('rc-result-summary').innerHTML = summaryHTML;
             document.getElementById('rc-calc-steps').innerHTML = stepsHTML;
             document.getElementById('rc-svg-wrapper').innerHTML = svgContent;
-
-            document.getElementById('rpt-svg-container').innerHTML = svgContent;
-            document.getElementById('rpt-material-specs').innerHTML = rptMaterial;
-            document.getElementById('rpt-calc-details').innerHTML = rptCalcDetails;
-            document.getElementById('rpt-badge').className = pass ? "px-3 py-1.5 rounded text-xs font-bold bg-emerald-600 text-white shadow-sm" : "px-3 py-1.5 rounded text-xs font-bold bg-red-600 text-white shadow-sm";
-            document.getElementById('rpt-badge').innerText = pass ? "PASSED / สมบูรณ์" : "FAILED / ต้องแก้ไข";
         }
     </script>
 </body>
